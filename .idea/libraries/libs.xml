@@ -1,0 +1,53 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-natives-linux-arm64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengles-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengles-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengles-natives-macos.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-glfw-natives-windows-x86.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-natives-windows-arm64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengles-natives-windows-arm64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengles.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengles-natives-linux-arm64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-natives-windows.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/PNGDecoder.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-natives-macos.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-natives-windows-x86.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-glfw-natives-linux-arm32.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengl-natives-windows.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengl-natives-windows-arm64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-glfw-natives-macos-arm64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengl-natives-macos.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-glfw-natives-windows-arm64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengles-natives-macos-arm64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-glfw-natives-linux.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-glfw-natives-windows.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-glfw-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengl-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengl-natives-macos-arm64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengles-natives-linux-arm32.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-glfw-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-natives-linux-arm32.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-glfw-natives-macos.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengl-natives-linux-arm32.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengl-natives-linux.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-natives-macos-arm64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengl-natives-windows-x86.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-glfw-natives-linux-arm64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengles-natives-windows-x86.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengles-natives-linux.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengl-natives-linux-arm64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-natives-linux.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengl-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-glfw.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Farm Game/libs/lwjgl-opengles-natives-windows.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
