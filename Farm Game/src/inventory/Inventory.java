@@ -24,7 +24,6 @@ public class Inventory {
     private Item selected;
     private boolean isOpen = false;
     private double lastTimeOpened = 0;
-    private double lastTimePressed = 0;
     private Item flyingItem;
     private int previousSpot;
 
