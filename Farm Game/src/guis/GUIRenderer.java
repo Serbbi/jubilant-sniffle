@@ -1,9 +1,7 @@
 package guis;
 
 import models.RawModel;
-import models.TexturedModel;
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -19,7 +17,7 @@ public class GUIRenderer {
     private GUIShader shader;
 
     public GUIRenderer(Loader loader) {
-        float[] positions = {-1, 1, -1, -1, 1, 1, 1,-1};
+        float[] positions = {-1, 1, -1, -1, 1, 1, 1, -1};
         quad = loader.loadToVAO(positions,2);
         shader = new GUIShader();
     }
@@ -56,6 +54,8 @@ public class GUIRenderer {
             GL11.glDisable(GL11.GL_DEPTH_TEST);
             GL13.glActiveTexture(GL13.GL_TEXTURE0);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, gui.getTexturedModel().getTexture().getTextureID());
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP_TO_EDGE);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP_TO_EDGE);
             Matrix4f matrix = Maths.createTransformationMatrix(gui.getPosition(), gui.getScale());
             shader.loadTransformation(matrix);
             GL11.glDrawElements(GL11.GL_TRIANGLES, gui.getTexturedModel().getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);

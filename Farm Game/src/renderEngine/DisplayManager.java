@@ -4,21 +4,26 @@ import components.GrowthComponent;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import guis.GUIManager;
 import guis.GUIRenderer;
+import guis.GUITexture;
 import inventory.Inventory;
 import items.ItemFactory;
 import items.plants.Plant;
 import kotlin.Pair;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 import terrain.Terrain;
 import toolbox.Keyboard;
 import toolbox.Mouse;
 import toolbox.MousePicker;
 import toolbox.StorageObjects;
+import utils.Texture;
 
 import java.nio.IntBuffer;
 import java.util.*;
@@ -38,6 +43,7 @@ public class DisplayManager {
     private static long lastFrameTime;
     private static float delta;
     private ExecutorService executorService;
+    private GUIManager guiManager;
 
     public void createDisplay() {
         // Setup an error callback. The default implementation
@@ -52,6 +58,9 @@ public class DisplayManager {
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+
+        // Get the resolution of the primary monitor
+        GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
         width[0] = 2160;
         height[0] = 1440;
@@ -69,9 +78,6 @@ public class DisplayManager {
 
             // Get the window size passed to glfwCreateWindow
             glfwGetWindowSize(window, pWidth, pHeight);
-
-            // Get the resolution of the primary monitor
-            GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
             // Center the window
             glfwSetWindowPos(
@@ -121,6 +127,10 @@ public class DisplayManager {
         GrowthComponent growthComponent = new GrowthComponent();
         executorService.submit(growthComponent);
 
+        guiManager = new GUIManager(inventory.getGui());
+        guiManager.addGUIList(inventory.getGui().getInventoryTextures());
+        guiManager.addGUIList(inventory.getGui().getBigInventoryTextures());
+
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while ( !glfwWindowShouldClose(window) ) {
@@ -135,14 +145,28 @@ public class DisplayManager {
             }
             renderTerrain(renderer,terrain);
 
-            guiRenderer.render2(inventory.getGui().getGuiElements());
-            guiRenderer.render(inventory.getGui().getGuiIcons());
+            if(inventory.isOpen()) {
+                guiRenderer.render(inventory.getGui().getBigInventoryTextures());
+            }
+            guiRenderer.render(inventory.getGui().getInventoryTextures());
             inventory.select();
+            inventory.updateFlyingItem();
 
             if(Mouse.isPressedLeftButton()) {
-                inventory.useItem();
+                inventory.mouseSelect();
+                if(!inventory.isOpen()) {
+                    inventory.useItem();
+                }
             }
 
+            if(Keyboard.isKeyDown(GLFW_KEY_R)) {
+                guiManager.resizeGUIs();
+                inventory.getGui().resetInventoryGUI();
+            }
+
+            if(Keyboard.isKeyDown(GLFW_KEY_E)) {
+                inventory.setOpen(!inventory.isOpen());
+            }
             if (Keyboard.isKeyDown(GLFW_KEY_ESCAPE)) {
                 glfwSetWindowShouldClose(window, true);
             }
@@ -202,5 +226,10 @@ public class DisplayManager {
 
     public void framebuffer_size_callback(long window, int width, int height) {
         glViewport(0, 0, width, height);
+        float aspectRatio = (float)width / (float)height;
+        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        GL11.glLoadIdentity();
+        GL11.glOrtho(-aspectRatio, aspectRatio, -1.0f, 1.0f, -1.0f, 1.0f);
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
     }
 }

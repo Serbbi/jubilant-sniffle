@@ -28,18 +28,18 @@ public class ItemFactory {
         Map<String, Object> options = new HashMap<>();
         options.put("terrain", terrain);
         options.put("mousePicker", mousePicker);
-        GUITexture icon = new GUITexture(loader.loadTexture("items/tools/shovelIcon"), new Vector2f(0,0), new Vector2f(0.1f,0.1f));
+        GUITexture icon = new GUITexture(loader.loadTexture("items/tools/shovelIcon"), new Vector2f(0,0), new Vector2f(0.2f,0.2f));
         Shovel shovel = new Shovel(icon, options);
-        inventory.addItem(shovel);
+        inventory.addItemAtFirstFreeSpot(shovel);
     }
 
     public void createHoe() {
         Map<String, Object> options = new HashMap<>();
         options.put("terrain", terrain);
         options.put("mousePicker", mousePicker);
-        GUITexture icon = new GUITexture(loader.loadTexture("items/tools/shovelIcon"), new Vector2f(0,0), new Vector2f(0.1f,0.1f));
+        GUITexture icon = new GUITexture(loader.loadTexture("items/tools/shovelIcon"), new Vector2f(0,0), new Vector2f(0.2f,0.2f));
         Hoe hoe = new Hoe(icon, options);
-        inventory.addItem(hoe);
+        inventory.addItemAtFirstFreeSpot(hoe);
     }
 
     public void createCarrotSeeds() {
@@ -47,8 +47,8 @@ public class ItemFactory {
         options.put("terrain", terrain);
         options.put("mousePicker", mousePicker);
         options.put("loader", loader);
-        GUITexture icon = new GUITexture(loader.loadTexture("items/plants/carrot/carrotSeedsIcon"), new Vector2f(0,0), new Vector2f(0.1f,0.1f));
+        GUITexture icon = new GUITexture(loader.loadTexture("items/plants/carrot/carrotSeedsIcon"), new Vector2f(0,0), new Vector2f(0.2f,0.2f));
         CarrotSeeds carrotSeeds = new CarrotSeeds(icon, options);
-        inventory.addItem(carrotSeeds);
+        inventory.addItemAtFirstFreeSpot(carrotSeeds);
     }
 }

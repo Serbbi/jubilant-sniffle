@@ -1,97 +1,160 @@
 package inventory;
 
-import guis.GUIElement;
 import guis.GUITexture;
-import models.RawModel;
-import models.TexturedModel;
-import objConverter.ModelData;
-import objConverter.OBJFileLoader;
 import org.joml.Vector2f;
+import renderEngine.DisplayManager;
 import renderEngine.Loader;
-import textures.ModelTexture;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryGUI {
-    private Loader loader;
-    private List<GUIElement> guiElements;
-    private List<GUITexture> guiIcons;
-    private ModelTexture unSelected;
-    private ModelTexture selected;
-    private List<Vector2f> slotCoordinates;
+    private static final float DISTANCE_BETWEEN_SLOTS = 0.01f;
+    private static final float SLOT_SIZE = 0.1f;
+    private static final float INVENTORY_WIDTH = 0.5f;
+    private static final float INVENTORY_HEIGHT = 0.4f;
+    private List<GUITexture> slotTextures;
+    private List<GUITexture> itemTextures;
+    private List<GUITexture> bigInventory;
+    private final int unSelected;
+    private final int selected;
+    private final int lightYellow;
 
     public InventoryGUI(Loader loader) {
-        guiElements = new ArrayList<>();
-        guiIcons = new ArrayList<>();
-        slotCoordinates = new ArrayList<>();
-        setSlotCoordinates();
-        this.loader = loader;
+        slotTextures = new ArrayList<>();
+        itemTextures = new ArrayList<>();
+        bigInventory = new ArrayList<>();
+        unSelected = loader.loadTexture("inventory/blueGrey");
+        selected = loader.loadTexture("inventory/white");
+        lightYellow = loader.loadTexture("inventory/lightYellow");
+        setInventoryGUI();
     }
 
-    public void setInventoryGUI() {
-        selected = new ModelTexture(loader.loadTexture("inventory/white"));
+    private void setInventoryGUI() {
+        for (int i = 0; i < 5; i++) {
+            slotTextures.add(new GUITexture(unSelected, new Vector2f(0f, -0.88f), new Vector2f(SLOT_SIZE, SLOT_SIZE)));
+        }
 
-        ModelData invData = OBJFileLoader.loadOBJ("inventory/inventoryBack");
-        RawModel invRaw = loader.loadToVAO(invData.getVertices(), invData.getTextureCoords(), invData.getIndices());
-        ModelTexture invTexture = new ModelTexture(loader.loadTexture("inventory/lightYellow"));
-        TexturedModel invTextured = new TexturedModel(invRaw, invTexture);
-        GUIElement inventoryBack = new GUIElement(new Vector2f(0,-0.88f), invTextured, new Vector2f(0.1f,0.1f));
+        GUITexture invBackground = new GUITexture(lightYellow, new Vector2f(0f, 0f), new Vector2f(INVENTORY_WIDTH, INVENTORY_HEIGHT));
+        bigInventory.add(invBackground);
 
-        ModelData slot = OBJFileLoader.loadOBJ("inventory/inventoryFront");
-        RawModel slotRaw = loader.loadToVAO(slot.getVertices(), slot.getTextureCoords(), slot.getIndices());
-        unSelected = new ModelTexture(loader.loadTexture("inventory/blueGrey"));
-        TexturedModel slot5Textured = new TexturedModel(slotRaw, unSelected);
-        TexturedModel slot1Textured = new TexturedModel(slotRaw, unSelected);
-        TexturedModel slot2Textured = new TexturedModel(slotRaw, unSelected);
-        TexturedModel slot3Textured = new TexturedModel(slotRaw, unSelected);
-        TexturedModel slot4Textured = new TexturedModel(slotRaw, unSelected);
-        GUIElement invFront3 = new GUIElement(new Vector2f(0,0), slot3Textured, new Vector2f(0.1f,0.1f));
-        GUIElement invFront1 = new GUIElement(new Vector2f(-0.38f,-0.88f), slot1Textured, new Vector2f(0.1f,0.1f));
-        GUIElement invFront2 = new GUIElement(new Vector2f(-0.19f,-0.88f), slot2Textured, new Vector2f(0.1f,0.1f));
-        GUIElement invFront4 = new GUIElement(new Vector2f(0.19f,-0.88f), slot4Textured, new Vector2f(0.1f,0.1f));
-        GUIElement invFront5 = new GUIElement(new Vector2f(0.38f,-0.88f), slot5Textured, new Vector2f(0.1f,0.1f));
+        for (int i = 0; i < 15; i++) {
+            bigInventory.add(new GUITexture(unSelected, new Vector2f(0f, 0f), new Vector2f(SLOT_SIZE, SLOT_SIZE)));
+        }
 
-        guiElements.add(inventoryBack);
-        guiElements.add(invFront1);
-        guiElements.add(invFront2);
-        guiElements.add(invFront3);
-        guiElements.add(invFront4);
-        guiElements.add(invFront5);
+        resetInventoryGUI();
     }
 
-    public List<GUIElement> getGuiElements() {
-        return guiElements;
+    public void resetInventoryGUI() {
+        setToRightOf(slotTextures.get(2), slotTextures.get(3), DISTANCE_BETWEEN_SLOTS);
+        setToRightOf(slotTextures.get(3), slotTextures.get(4), DISTANCE_BETWEEN_SLOTS);
+        setToLeftOf(slotTextures.get(2), slotTextures.get(1), DISTANCE_BETWEEN_SLOTS);
+        setToLeftOf(slotTextures.get(1), slotTextures.get(0), DISTANCE_BETWEEN_SLOTS);
+
+        setToRightOf(bigInventory.get(3), bigInventory.get(4), DISTANCE_BETWEEN_SLOTS);
+        setToRightOf(bigInventory.get(4), bigInventory.get(5), DISTANCE_BETWEEN_SLOTS);
+        setToLeftOf(bigInventory.get(3), bigInventory.get(2), DISTANCE_BETWEEN_SLOTS);
+        setToLeftOf(bigInventory.get(2), bigInventory.get(1), DISTANCE_BETWEEN_SLOTS);
+
+        setToAboveOf(bigInventory.get(1), bigInventory.get(6), DISTANCE_BETWEEN_SLOTS);
+        setToAboveOf(bigInventory.get(2), bigInventory.get(7), DISTANCE_BETWEEN_SLOTS);
+        setToAboveOf(bigInventory.get(3), bigInventory.get(8), DISTANCE_BETWEEN_SLOTS);
+        setToAboveOf(bigInventory.get(4), bigInventory.get(9), DISTANCE_BETWEEN_SLOTS);
+        setToAboveOf(bigInventory.get(5), bigInventory.get(10), DISTANCE_BETWEEN_SLOTS);
+        setToLeftOf(bigInventory.get(8), bigInventory.get(7), DISTANCE_BETWEEN_SLOTS);
+        setToLeftOf(bigInventory.get(7), bigInventory.get(6), DISTANCE_BETWEEN_SLOTS);
+        setToRightOf(bigInventory.get(8), bigInventory.get(9), DISTANCE_BETWEEN_SLOTS);
+        setToRightOf(bigInventory.get(9), bigInventory.get(10), DISTANCE_BETWEEN_SLOTS);
+
+        setToBelowOf(bigInventory.get(1), bigInventory.get(11), DISTANCE_BETWEEN_SLOTS);
+        setToBelowOf(bigInventory.get(2), bigInventory.get(12), DISTANCE_BETWEEN_SLOTS);
+        setToBelowOf(bigInventory.get(3), bigInventory.get(13), DISTANCE_BETWEEN_SLOTS);
+        setToBelowOf(bigInventory.get(4), bigInventory.get(14), DISTANCE_BETWEEN_SLOTS);
+        setToBelowOf(bigInventory.get(5), bigInventory.get(15), DISTANCE_BETWEEN_SLOTS);
+        setToLeftOf(bigInventory.get(13), bigInventory.get(12), DISTANCE_BETWEEN_SLOTS);
+        setToLeftOf(bigInventory.get(12), bigInventory.get(11), DISTANCE_BETWEEN_SLOTS);
+        setToRightOf(bigInventory.get(13), bigInventory.get(14), DISTANCE_BETWEEN_SLOTS);
+        setToRightOf(bigInventory.get(14), bigInventory.get(15), DISTANCE_BETWEEN_SLOTS);
+
+        for (int i = 0; i < itemTextures.size(); i++) {
+            itemTextures.get(i).setPosition(slotTextures.get(i).getPosition());
+        }
     }
 
-    public void addIcon(GUITexture icon) {
-        guiIcons.add(icon);
+    public void setToRightOf(GUITexture guiTexture, GUITexture objectToPlace, float distance) {
+        int displayWidth = DisplayManager.getWidth();
+        int distanceInPixels = (int) (distance * displayWidth);
+        float halfOfReferenceObject = guiTexture.getPosition().x * displayWidth / 2 + (displayWidth * guiTexture.getScale().x / 2.0f);
+        float halfOfObjectToPlace = (displayWidth * objectToPlace.getScale().x / 2.0f);
+        distanceInPixels += halfOfReferenceObject + halfOfObjectToPlace;
+        float percentageOfScreen = (float) distanceInPixels / (displayWidth / 2.0f) * 100;
+        objectToPlace.setPosition(new Vector2f(percentageOfScreen/100, objectToPlace.getPosition().y));
     }
 
-    public List<GUITexture> getGuiIcons() {
-        return guiIcons;
+    public void setToLeftOf(GUITexture guiTexture, GUITexture objectToPlace, float distance) {
+        int displayWidth = DisplayManager.getWidth();
+        int distanceInPixels = (int) (distance * -1 * displayWidth);
+        float halfOfReferenceObject = guiTexture.getPosition().x * displayWidth / 2 - (displayWidth * guiTexture.getScale().x / 2.0f);
+        float halfOfObjectToPlace = (displayWidth * objectToPlace.getScale().x / -2.0f);
+        distanceInPixels += halfOfReferenceObject + halfOfObjectToPlace;
+        float percentageOfScreen = (float) distanceInPixels / (displayWidth / 2.0f) * 100;
+        objectToPlace.setPosition(new Vector2f(percentageOfScreen/100, objectToPlace.getPosition().y));
+    }
+
+    public void setToAboveOf(GUITexture guiTexture, GUITexture objectToPlace, float distance) {
+        int displayHeight = DisplayManager.getHeight();
+        int distanceInPixels = (int) (distance * displayHeight);
+        float halfOfReferenceObject = guiTexture.getPosition().y * displayHeight / 2 + (displayHeight * guiTexture.getScale().y / 2.0f);
+        float halfOfObjectToPlace = (displayHeight * objectToPlace.getScale().y / 2.0f);
+        distanceInPixels += halfOfReferenceObject + halfOfObjectToPlace;
+        float percentageOfScreen = (float) distanceInPixels / (displayHeight / 2.0f) * 100;
+        objectToPlace.setPosition(new Vector2f(objectToPlace.getPosition().x, percentageOfScreen/100));
+    }
+
+    public void setToBelowOf(GUITexture guiTexture, GUITexture objectToPlace, float distance) {
+        int displayHeight = DisplayManager.getHeight();
+        int distanceInPixels = (int) (distance * -1 * displayHeight);
+        float halfOfReferenceObject = guiTexture.getPosition().y * displayHeight / 2 - (displayHeight * guiTexture.getScale().y / 2.0f);
+        float halfOfObjectToPlace = (displayHeight * objectToPlace.getScale().y / -2.0f);
+        distanceInPixels += halfOfReferenceObject + halfOfObjectToPlace;
+        float percentageOfScreen = (float) distanceInPixels / (displayHeight / 2.0f) * 100;
+        objectToPlace.setPosition(new Vector2f(objectToPlace.getPosition().x, percentageOfScreen/100));
+    }
+
+    public List<GUITexture> getInventoryTextures() {
+        List<GUITexture> inventoryTextures = new ArrayList<>();
+        inventoryTextures.addAll(slotTextures);
+        inventoryTextures.addAll(itemTextures);
+        return inventoryTextures;
+    }
+
+    public List<GUITexture> getBigInventoryTextures() {
+        return bigInventory;
+    }
+
+    public List<GUITexture> getItemTextures() {
+        return itemTextures;
+    }
+
+    public List<GUITexture> getSlotTextures() {
+        return slotTextures;
+    }
+
+    public void addIcon(GUITexture icon, int spot) {
+        icon.setPosition(slotTextures.get(spot).getPosition());
+        itemTextures.add(icon);
     }
 
     public void unselect() {
-        for (int i = 1; i < guiElements.size(); i++) {
-            guiElements.get(i).getTexturedModel().setTexture(unSelected);
+        for(int i = 0; i < 5; i++) {
+            slotTextures.get(i).setTexture(unSelected);
         }
     }
 
     public void select(int n) {
         unselect();
-        guiElements.get(n).getTexturedModel().setTexture(selected);
-    }
-
-    private void setSlotCoordinates() {
-        slotCoordinates.add(new Vector2f(-0.38f,-0.88f));
-        slotCoordinates.add(new Vector2f(-0.19f,-0.88f));
-        slotCoordinates.add(new Vector2f(0,-0.88f));
-        slotCoordinates.add(new Vector2f(0.19f,-0.88f));
-        slotCoordinates.add(new Vector2f(0.38f,-0.88f));
-    }
-
-    public List<Vector2f> getSlotCoordinates() {
-        return slotCoordinates;
+        if(n <= slotTextures.size()) {
+            slotTextures.get(n - 1).setTexture(selected);
+        }
     }
 }

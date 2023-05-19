@@ -7,6 +7,8 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import renderEngine.DisplayManager;
 
+import static org.joml.Math.max;
+
 public class Maths {
     public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale) {
         Matrix4f matrix = new Matrix4f();

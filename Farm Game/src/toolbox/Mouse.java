@@ -9,6 +9,7 @@ public class Mouse {
     private static float scrollY;
     private static boolean pressedLeftButton;
     private static boolean pressedRightButton;
+    private static boolean dragging;
 
     public Mouse() {
         GLFW.glfwSetScrollCallback(DisplayManager.getWindow(), this::scroll_callback);
@@ -19,6 +20,13 @@ public class Mouse {
     private void cursor_position_callback(long window, double xpos, double ypos) {
         mouseX = (float) xpos;
         mouseY = (float) ypos;
+//        System.out.println("Mouse X: " + mouseX + " Mouse Y: " + mouseY);
+        if (GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_RELEASE)
+        {
+            dragging = false;
+            return;
+        }
+        dragging = true;
     }
 
     private void mouse_button_callback(long window, int button, int action, int mods) {
@@ -60,5 +68,9 @@ public class Mouse {
 
     public static void setScrollY(float scrollY) {
         Mouse.scrollY = scrollY;
+    }
+
+    public static boolean isDragging() {
+        return dragging;
     }
 }
