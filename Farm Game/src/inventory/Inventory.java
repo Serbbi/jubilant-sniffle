@@ -115,12 +115,15 @@ public class Inventory {
         return gui;
     }
 
-    public void addItemAtFirstFreeSpot(Item item) {
-        items.put(firstFreeSpot, item);
-        if(firstFreeSpot < 6) {
+    public boolean addItemAtFirstFreeSpot(Item item) {
+        if(firstFreeSpot <= 20) {
+            items.put(firstFreeSpot, item);
             gui.addIcon(item.getTexture(), firstFreeSpot - 1);
+        } else {
+            return false;
         }
-        updateFreeSpot();
+        updateFirstFreeSpot();
+        return true;
     }
 
     public void addItem(Item item, int slot) {
@@ -130,7 +133,7 @@ public class Inventory {
         }
     }
 
-    private void updateFreeSpot() {
+    private void updateFirstFreeSpot() {
         for (int i = 1; i <= TOTAL_SPOTS; i++) {
             if(!items.containsKey(i)) {
                 firstFreeSpot = i;
@@ -149,8 +152,8 @@ public class Inventory {
     public int isAboveInventory() {
         float mouseX = Mouse.getMouseX();
         float mouseY = Mouse.getMouseY();
-        List<GUITexture> guiTextures = gui.getInventoryTextures();
-        for (int i = 0; i < gui.getSlotTextures().size(); i++) {
+        List<GUITexture> guiTextures = gui.getSlotTextures();
+        for (int i = 0; i < guiTextures.size(); i++) {
             Pair<Float, Float> bottomLeft = guiTextures.get(i).getTextureCoords().getFirst();
             Pair<Float, Float> topRight = guiTextures.get(i).getTextureCoords().getSecond();
             if(mouseX >= bottomLeft.getFirst() && mouseX <= topRight.getFirst() &&
@@ -158,6 +161,9 @@ public class Inventory {
                 return i + 1;
             }
         }
+//        for(int i = 0; i < gui.getBigInventory().size(); i++) {
+//
+//        }
         return -1;
     }
 

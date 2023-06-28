@@ -6,6 +6,7 @@ import renderEngine.DisplayManager;
 import renderEngine.Loader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class InventoryGUI {
@@ -14,16 +15,24 @@ public class InventoryGUI {
     private static final float INVENTORY_WIDTH = 0.5f;
     private static final float INVENTORY_HEIGHT = 0.4f;
     private List<GUITexture> slotTextures;
+    private List<GUITexture> bigInventoryItemTextures;
     private List<GUITexture> itemTextures;
     private List<GUITexture> bigInventory;
+    private GUITexture bigInventoryBackground;
+    private List<GUITexture> slots;
+    private HashMap<Integer, GUITexture> itemIcons;
     private final int unSelected;
     private final int selected;
     private final int lightYellow;
 
     public InventoryGUI(Loader loader) {
+        slots = new ArrayList<>();
+        itemIcons = new HashMap<>();
+
         slotTextures = new ArrayList<>();
         itemTextures = new ArrayList<>();
         bigInventory = new ArrayList<>();
+        bigInventoryItemTextures = new ArrayList<>();
         unSelected = loader.loadTexture("inventory/blueGrey");
         selected = loader.loadTexture("inventory/white");
         lightYellow = loader.loadTexture("inventory/lightYellow");
@@ -51,26 +60,28 @@ public class InventoryGUI {
         setToLeftOf(slotTextures.get(2), slotTextures.get(1), DISTANCE_BETWEEN_SLOTS);
         setToLeftOf(slotTextures.get(1), slotTextures.get(0), DISTANCE_BETWEEN_SLOTS);
 
-        setToRightOf(bigInventory.get(3), bigInventory.get(4), DISTANCE_BETWEEN_SLOTS);
-        setToRightOf(bigInventory.get(4), bigInventory.get(5), DISTANCE_BETWEEN_SLOTS);
-        setToLeftOf(bigInventory.get(3), bigInventory.get(2), DISTANCE_BETWEEN_SLOTS);
-        setToLeftOf(bigInventory.get(2), bigInventory.get(1), DISTANCE_BETWEEN_SLOTS);
-
-        setToAboveOf(bigInventory.get(1), bigInventory.get(6), DISTANCE_BETWEEN_SLOTS);
-        setToAboveOf(bigInventory.get(2), bigInventory.get(7), DISTANCE_BETWEEN_SLOTS);
-        setToAboveOf(bigInventory.get(3), bigInventory.get(8), DISTANCE_BETWEEN_SLOTS);
-        setToAboveOf(bigInventory.get(4), bigInventory.get(9), DISTANCE_BETWEEN_SLOTS);
-        setToAboveOf(bigInventory.get(5), bigInventory.get(10), DISTANCE_BETWEEN_SLOTS);
         setToLeftOf(bigInventory.get(8), bigInventory.get(7), DISTANCE_BETWEEN_SLOTS);
         setToLeftOf(bigInventory.get(7), bigInventory.get(6), DISTANCE_BETWEEN_SLOTS);
         setToRightOf(bigInventory.get(8), bigInventory.get(9), DISTANCE_BETWEEN_SLOTS);
         setToRightOf(bigInventory.get(9), bigInventory.get(10), DISTANCE_BETWEEN_SLOTS);
 
-        setToBelowOf(bigInventory.get(1), bigInventory.get(11), DISTANCE_BETWEEN_SLOTS);
-        setToBelowOf(bigInventory.get(2), bigInventory.get(12), DISTANCE_BETWEEN_SLOTS);
-        setToBelowOf(bigInventory.get(3), bigInventory.get(13), DISTANCE_BETWEEN_SLOTS);
-        setToBelowOf(bigInventory.get(4), bigInventory.get(14), DISTANCE_BETWEEN_SLOTS);
-        setToBelowOf(bigInventory.get(5), bigInventory.get(15), DISTANCE_BETWEEN_SLOTS);
+        setToRightOf(bigInventory.get(3), bigInventory.get(4), DISTANCE_BETWEEN_SLOTS);
+        setToRightOf(bigInventory.get(4), bigInventory.get(5), DISTANCE_BETWEEN_SLOTS);
+        setToLeftOf(bigInventory.get(3), bigInventory.get(2), DISTANCE_BETWEEN_SLOTS);
+        setToLeftOf(bigInventory.get(2), bigInventory.get(1), DISTANCE_BETWEEN_SLOTS);
+
+        setToAboveOf(bigInventory.get(6), bigInventory.get(1), DISTANCE_BETWEEN_SLOTS);
+        setToAboveOf(bigInventory.get(7), bigInventory.get(2), DISTANCE_BETWEEN_SLOTS);
+        setToAboveOf(bigInventory.get(8), bigInventory.get(3), DISTANCE_BETWEEN_SLOTS);
+        setToAboveOf(bigInventory.get(9), bigInventory.get(4), DISTANCE_BETWEEN_SLOTS);
+        setToAboveOf(bigInventory.get(10), bigInventory.get(5), DISTANCE_BETWEEN_SLOTS);
+
+        setToBelowOf(bigInventory.get(6), bigInventory.get(11), DISTANCE_BETWEEN_SLOTS);
+        setToBelowOf(bigInventory.get(7), bigInventory.get(12), DISTANCE_BETWEEN_SLOTS);
+        setToBelowOf(bigInventory.get(8), bigInventory.get(13), DISTANCE_BETWEEN_SLOTS);
+        setToBelowOf(bigInventory.get(9), bigInventory.get(14), DISTANCE_BETWEEN_SLOTS);
+        setToBelowOf(bigInventory.get(10), bigInventory.get(15), DISTANCE_BETWEEN_SLOTS);
+
         setToLeftOf(bigInventory.get(13), bigInventory.get(12), DISTANCE_BETWEEN_SLOTS);
         setToLeftOf(bigInventory.get(12), bigInventory.get(11), DISTANCE_BETWEEN_SLOTS);
         setToRightOf(bigInventory.get(13), bigInventory.get(14), DISTANCE_BETWEEN_SLOTS);
@@ -78,6 +89,9 @@ public class InventoryGUI {
 
         for (int i = 0; i < itemTextures.size(); i++) {
             itemTextures.get(i).setPosition(slotTextures.get(i).getPosition());
+        }
+        for (int i = 0; i < bigInventoryItemTextures.size(); i++) {
+            bigInventoryItemTextures.get(i).setPosition(bigInventory.get(i + 1).getPosition());
         }
     }
 
@@ -129,7 +143,10 @@ public class InventoryGUI {
     }
 
     public List<GUITexture> getBigInventoryTextures() {
-        return bigInventory;
+        List<GUITexture> bigInventoryTextures = new ArrayList<>();
+        bigInventoryTextures.addAll(bigInventory);
+        bigInventoryTextures.addAll(bigInventoryItemTextures);
+        return bigInventoryTextures;
     }
 
     public List<GUITexture> getItemTextures() {
@@ -141,8 +158,13 @@ public class InventoryGUI {
     }
 
     public void addIcon(GUITexture icon, int spot) {
-        icon.setPosition(slotTextures.get(spot).getPosition());
-        itemTextures.add(icon);
+        if(spot > 4) {
+            icon.setPosition(bigInventory.get(spot-4).getPosition());
+            bigInventoryItemTextures.add(icon);
+        } else {
+            icon.setPosition(slotTextures.get(spot).getPosition());
+            itemTextures.add(icon);
+        }
     }
 
     public void unselect() {
