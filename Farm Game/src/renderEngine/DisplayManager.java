@@ -125,8 +125,7 @@ public class DisplayManager {
         executorService.submit(growthComponent);
 
         guiManager = new GUIManager(inventory.getGui());
-        guiManager.addGUIList(inventory.getGui().getInventoryTextures());
-        guiManager.addGUIList(inventory.getGui().getBigInventoryTextures());
+        guiManager.addGUIList(inventory.getGui().getAllGuis());
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -142,10 +141,11 @@ public class DisplayManager {
             }
             renderTerrain(renderer,terrain);
 
+            guiRenderer.render(inventory.getGui().getInventoryBar());
             if(inventory.isOpen()) {
-                guiRenderer.render(inventory.getGui().getBigInventoryTextures());
+                guiRenderer.render(inventory.getGui().getBigInventory());
             }
-            guiRenderer.render(inventory.getGui().getInventoryTextures());
+            guiRenderer.render(inventory.getGui().getItemIconsFromInventoryBar());
             inventory.select();
             inventory.updateFlyingItem();
 

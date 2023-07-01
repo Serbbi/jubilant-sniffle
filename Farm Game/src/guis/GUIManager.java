@@ -43,7 +43,10 @@ public class GUIManager {
             texture.setScale(new Vector2f(x, y));
         }
 
-        float scale = inventoryGUI.getInventoryTextures().get(0).getScale().x;
-        inventoryGUI.getBigInventoryTextures().get(0).setScale(new Vector2f(scale * 5 + 0.06f, 0.3f + 0.04f));
+//        float scale = inventoryGUI.getInventoryTextures().get(0).getScale().x;
+//        inventoryGUI.getBigInventoryTextures().get(0).setScale(new Vector2f(scale * 5 + 0.06f, 0.3f + 0.04f));
+        //i don't remember the values there :P
+        float scale = inventoryGUI.getInventoryBar().get(1).getScale().x;
+        inventoryGUI.getBigInventory().get(0).setScale(new Vector2f(scale * 5 + 0.06f, 0.3f + 0.04f));
     }
 }
