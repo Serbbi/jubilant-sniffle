@@ -15,7 +15,6 @@ import java.util.Map;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-//TODO: Add check to not be able to put two items on the same spot
 public class Inventory {
     private static final int TOTAL_SPOTS = 20;
     private static final float COOLDOWN = 0.3f;

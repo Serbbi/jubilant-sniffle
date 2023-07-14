@@ -26,7 +26,7 @@ public class Renderer {
         this.shader = shader;
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glCullFace(GL11.GL_BACK);
-        createProjectionMatrix();
+        projectionMatrix = Maths.createProjectionMatrix();
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.stop();
@@ -83,21 +83,6 @@ public class Renderer {
                 entity.getRotY(), entity.getRotZ(), entity.getScale());
         shader.loadTransformationMatrix(transformationMatrix);
         //shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
-    }
-
-    private void createProjectionMatrix() {
-        float aspectRatio = (float) DisplayManager.getWidth() / DisplayManager.getHeight();
-        float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
-        float x_scale = y_scale / aspectRatio;
-        float frustum_length = FAR_PLANE - NEAR_PLANE;
-
-        projectionMatrix = new Matrix4f();
-        projectionMatrix.m00(x_scale);
-        projectionMatrix.m11(y_scale);
-        projectionMatrix.m22(-((FAR_PLANE+NEAR_PLANE)/frustum_length));
-        projectionMatrix.m23(-1);
-        projectionMatrix.m32(-((2*NEAR_PLANE * FAR_PLANE)/frustum_length));
-        projectionMatrix.m33(0);
     }
 
     public void setProjectionMatrix(Matrix4f projectionMatrix) {

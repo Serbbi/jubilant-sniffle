@@ -84,7 +84,7 @@ public class DisplayManager {
             );
         } // the stack frame is popped automatically
 
-        glfwSetFramebufferSizeCallback(window, this::framebuffer_size_callback);
+        glfwSetWindowSizeCallback(window, this::window_size_callback);
         executorService = Executors.newCachedThreadPool();
 
         // Make the OpenGL context current
@@ -113,7 +113,7 @@ public class DisplayManager {
         //TODO: GIVE LIGHT CENTER OF TERRAIN
         Light light = new Light(new Vector3f(25,75,25), new Vector3f(1,1,1));
         Camera camera = new Camera();
-        MousePicker mousePicker = new MousePicker(camera,terrain);
+        MousePicker mousePicker = new MousePicker(camera);
 
         Inventory inventory = new Inventory(loader);
         ItemFactory itemFactory = new ItemFactory(terrain, mousePicker, inventory, loader);
@@ -126,6 +126,7 @@ public class DisplayManager {
 
         guiManager = new GUIManager(inventory.getGui());
         guiManager.addGUIList(inventory.getGui().getAllGuis());
+        guiManager.resizeGUIs();
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -154,11 +155,6 @@ public class DisplayManager {
                 if(!inventory.isOpen()) {
                     inventory.useItem();
                 }
-            }
-
-            if(Keyboard.isKeyDown(GLFW_KEY_R)) {
-                guiManager.resizeGUIs();
-                inventory.getGui().resetInventoryGUI();
             }
 
             if(Keyboard.isKeyDown(GLFW_KEY_E)) {
@@ -221,12 +217,16 @@ public class DisplayManager {
         lastFrameTime = currentFrameTime;
     }
 
-    public void framebuffer_size_callback(long window, int width, int height) {
+    public void window_size_callback(long window, int width, int height) {
+        DisplayManager.width[0] = width;
+        DisplayManager.height[0] = height;
         glViewport(0, 0, width, height);
         float aspectRatio = (float)width / (float)height;
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
         GL11.glOrtho(-aspectRatio, aspectRatio, -1.0f, 1.0f, -1.0f, 1.0f);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        guiManager.resizeGUIs();
     }
+
 }
