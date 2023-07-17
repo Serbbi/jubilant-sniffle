@@ -4,7 +4,7 @@ import kotlin.Pair;
 import org.joml.Vector2f;
 import renderEngine.DisplayManager;
 
-public class GUITexture {
+public class GUITexture implements Cloneable {
 
     private int texture;
     private Vector2f position;
@@ -67,5 +67,15 @@ public class GUITexture {
 
     public void setRatio(float ratio) {
         this.ratio = ratio;
+    }
+
+    @Override
+    public GUITexture clone() {
+        try {
+            // TODO: copy mutable state here, so the clone can't change the internals of the original
+            return (GUITexture) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

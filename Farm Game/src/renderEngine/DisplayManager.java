@@ -17,10 +17,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 import terrain.Terrain;
-import toolbox.Keyboard;
-import toolbox.Mouse;
-import toolbox.MousePicker;
-import toolbox.StorageObjects;
+import toolbox.*;
 
 import java.nio.IntBuffer;
 import java.util.*;
@@ -127,6 +124,8 @@ public class DisplayManager {
         guiManager = new GUIManager(inventory.getGui());
         guiManager.addGUIList(inventory.getGui().getAllGuis());
         guiManager.resizeGUIs();
+
+        PlantModelsStorage.initializePlantModels(loader);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.

@@ -1,6 +1,8 @@
 package items;
 
 import guis.GUITexture;
+import inventory.Inventory;
+import items.plants.Carrot;
 import items.plants.Plant;
 import org.joml.Vector3f;
 import terrain.Terrain;
@@ -22,14 +24,16 @@ public class Hoe implements Item{
     public void use() {
         MousePicker mousePicker = (MousePicker) options.get("mousePicker");
         Terrain terrain = (Terrain) options.get("terrain");
+        Inventory inventory = (Inventory) options.get("inventory");
         Vector3f v = mousePicker.getCurrentTerrainPoint();
         float xCoord = (float) Math.floor(v.x);
         float zCoord = (float) Math.floor(v.z);
         Object object = terrain.getThatObject(xCoord, zCoord);
         if(object instanceof Plant plant) {
-            if(plant.canHarvest()) {
+            if(plant.canHarvest() && inventory.addItemAtFirstFreeSpot((Item) plant)) {
                 StorageObjects.removePlant(plant);
                 terrain.removeObject(xCoord, zCoord);
+//                inventory.addItemAtFirstFreeSpot((Item) plant);
             }
         }
     }

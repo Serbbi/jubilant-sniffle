@@ -126,10 +126,11 @@ public class Inventory {
         if(firstFreeSpot <= TOTAL_SPOTS) {
             items.put(firstFreeSpot, item);
             gui.addIcon(item.getTexture(), firstFreeSpot);
+            updateFirstFreeSpot();
         } else {
             return false;
         }
-        return updateFirstFreeSpot();
+        return true;
     }
 
     public boolean addItem(Item item, int slot) {
@@ -146,15 +147,13 @@ public class Inventory {
         gui.removeIcon(slot);
     }
 
-    private boolean updateFirstFreeSpot() {
+    private void updateFirstFreeSpot() {
         for (int i = 1; i <= TOTAL_SPOTS; i++) {
             if(!items.containsKey(i)) {
                 firstFreeSpot = i;
-//                System.out.println("First free spot is " + firstFreeSpot);
-                return true;
+                break;
             }
         }
-        return false;
     }
 
     public void useItem() {
