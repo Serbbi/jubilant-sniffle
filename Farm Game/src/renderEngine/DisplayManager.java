@@ -4,12 +4,16 @@ import components.GrowthComponent;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import fontMeshCreator.FontType;
+import fontMeshCreator.GUIText;
+import fontRendering.TextMaster;
 import guis.GUIManager;
 import guis.GUIRenderer;
 import inventory.Inventory;
 import items.ItemFactory;
 import items.plants.Plant;
 import kotlin.Pair;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -19,6 +23,7 @@ import org.lwjgl.system.MemoryStack;
 import terrain.Terrain;
 import toolbox.*;
 
+import java.io.File;
 import java.nio.IntBuffer;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -106,6 +111,7 @@ public class DisplayManager {
         MasterRenderer renderer = new MasterRenderer();
         GUIRenderer guiRenderer = new GUIRenderer(loader);
         Terrain terrain = new Terrain(loader);
+        TextMaster.init(loader);
 
         //TODO: GIVE LIGHT CENTER OF TERRAIN
         Light light = new Light(new Vector3f(25,75,25), new Vector3f(1,1,1));
@@ -121,11 +127,15 @@ public class DisplayManager {
         GrowthComponent growthComponent = new GrowthComponent();
         executorService.submit(growthComponent);
 
-        guiManager = new GUIManager(inventory.getGui());
+        guiManager = new GUIManager(inventory);
         guiManager.addGUIList(inventory.getGui().getAllGuis());
         guiManager.resizeGUIs();
 
         PlantModelsStorage.initializePlantModels(loader);
+
+
+//        FontType font = new FontType(loader.loadTexture("fonts/tahoma"), new File("Farm Game/res/fonts/tahoma.fnt"));
+//        GUIText text = new GUIText("Hello World!", 1, font, new Vector2f(0.5f,0.5f), 0.5f, true);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -162,11 +172,16 @@ public class DisplayManager {
             if (Keyboard.isKeyDown(GLFW_KEY_ESCAPE)) {
                 glfwSetWindowShouldClose(window, true);
             }
+            TextMaster.render();
+
+
             glfwSwapBuffers(window); // swap the color buffers
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();
         }
+
+        TextMaster.cleanUp();
         guiRenderer.cleanUp();
         loader.cleanUp();
         renderer.cleanUp();

@@ -18,7 +18,7 @@ public class GrowthComponent implements Runnable{
                 n = (int) (Math.random()*(MAX-MIN+1)+MIN);
                 switch (plant.getName()) {
                     case "Carrot":
-                        if(n > 30) {plant.grow();}
+                        if(n > 10) {plant.grow();}
                         break;
                     case "Wheat":
                         if(n > 35) {plant.grow();}

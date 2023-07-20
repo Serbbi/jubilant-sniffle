@@ -21,7 +21,7 @@ public class CarrotSeeds implements Item {
     }
 
     @Override
-    public void use() {
+    public boolean use() {
         Terrain terrain = (Terrain) options.get("terrain");
         MousePicker mousePicker = (MousePicker) options.get("mousePicker");
         Vector3f c = mousePicker.getCurrentTerrainPoint();
@@ -32,12 +32,24 @@ public class CarrotSeeds implements Item {
             if(Objects.equals(terrain.getTileNames().get(new Pair<>(xCoord, zCoord + 1)), "mud")) {
                 Carrot carrot = new Carrot((int) xCoord, (int) zCoord);
                 terrain.placeObject(xCoord,zCoord, carrot);
+                return true;
             }
         }
+        return false;
     }
 
     @Override
     public GUITexture getTexture() {
         return icon;
+    }
+
+    @Override
+    public boolean isStackable() {
+        return true;
+    }
+
+    @Override
+    public String getName() {
+        return "Carrot Seeds";
     }
 }

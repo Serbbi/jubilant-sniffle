@@ -46,11 +46,18 @@ public class Carrot extends Entity implements Item, Plant {
     }
 
     @Override
-    public void use() {}
+    public boolean use() {
+        return false;
+    }
 
     @Override
     public GUITexture getTexture() {
         return icon;
+    }
+
+    @Override
+    public boolean isStackable() {
+        return true;
     }
 
 }

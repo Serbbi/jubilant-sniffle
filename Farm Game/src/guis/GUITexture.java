@@ -17,6 +17,7 @@ public class GUITexture implements Cloneable {
         this.position = position;
         this.scale = scale;
         ratio = scale.y / scale.x;
+        reSetTextureCoords();
     }
 
     public void reSetTextureCoords() {

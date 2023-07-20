@@ -21,7 +21,7 @@ public class Hoe implements Item{
     }
 
     @Override
-    public void use() {
+    public boolean use() {
         MousePicker mousePicker = (MousePicker) options.get("mousePicker");
         Terrain terrain = (Terrain) options.get("terrain");
         Inventory inventory = (Inventory) options.get("inventory");
@@ -30,16 +30,27 @@ public class Hoe implements Item{
         float zCoord = (float) Math.floor(v.z);
         Object object = terrain.getThatObject(xCoord, zCoord);
         if(object instanceof Plant plant) {
-            if(plant.canHarvest() && inventory.addItemAtFirstFreeSpot((Item) plant)) {
+            if(plant.canHarvest() && inventory.addItem((Item) plant, 1)) {
                 StorageObjects.removePlant(plant);
                 terrain.removeObject(xCoord, zCoord);
-//                inventory.addItemAtFirstFreeSpot((Item) plant);
+                return true;
             }
         }
+        return false;
     }
 
     @Override
     public GUITexture getTexture() {
         return icon;
+    }
+
+    @Override
+    public boolean isStackable() {
+        return false;
+    }
+
+    @Override
+    public String getName() {
+        return "Hoe";
     }
 }

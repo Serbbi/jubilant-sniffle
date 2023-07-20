@@ -1,6 +1,8 @@
 package guis;
 
+import inventory.Inventory;
 import inventory.InventoryGUI;
+import inventory.InventoryItemQuantities;
 import org.joml.Vector2f;
 import renderEngine.DisplayManager;
 
@@ -10,9 +12,11 @@ import java.util.List;
 public class GUIManager {
     private List<GUITexture> guiTextures;
     private InventoryGUI inventoryGUI;
+    private InventoryItemQuantities itemQuantities;
 
-    public GUIManager(InventoryGUI inventoryGUI) {
-        this.inventoryGUI = inventoryGUI;
+    public GUIManager(Inventory inventory) {
+        this.inventoryGUI = inventory.getGui();
+        this.itemQuantities = inventory.getItemQuantities();
         guiTextures = new ArrayList<>();
     }
 
@@ -42,5 +46,6 @@ public class GUIManager {
         inventoryGUI.getBigInventory().get(0).setScale(new Vector2f(scale * 5 + 0.06f, 0.3f + 0.04f));
 
         inventoryGUI.resetInventoryGUI();
+        itemQuantities.resetQuantityTexts();
     }
 }
