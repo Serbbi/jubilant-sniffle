@@ -1,6 +1,5 @@
 package toolbox;
 
-import guis.GUIManager;
 import guis.GUITexture;
 import models.RawModel;
 import models.TexturedModel;
@@ -34,6 +33,7 @@ public class PlantModelsStorage {
             }
             RawModel plantRaw = loader.loadToVAO(plantData.getVertices(), plantData.getTextureCoords(), plantData.getNormals(), plantData.getIndices());
             ModelTexture plantTexture = new ModelTexture(loader.loadTexture("items/plants/" + plantName + "/" + plantName + "Stage" + stage + "Texture"));
+            plantTexture.setReflectivity(0.1f);
             TexturedModel texturedPlant = new TexturedModel(plantRaw, plantTexture);
             plantModels.add(texturedPlant);
             stage++;

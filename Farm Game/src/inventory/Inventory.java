@@ -84,7 +84,6 @@ public class Inventory {
                         previousSpot = i;
                         selected = null;
                         gui.unselect();
-//                        System.out.println("Picked up item");
                         break;
                     }
                 }
@@ -106,11 +105,9 @@ public class Inventory {
                         addItemAtSlot(flyingItem, previousSpot, quantityFlyingItem);
                     }
                     updateFirstFreeSpot();
-//                    System.out.println("Added item to slot " + slot);
                 } else {
                     addItemAtSlot(flyingItem, previousSpot, quantityFlyingItem);
                     flyingItem.getTexture().setPosition(gui.getSlots().get(previousSpot).getPosition());
-//                    System.out.println("Added item back");
                 }
                 flyingItem = null;
             }
@@ -197,6 +194,8 @@ public class Inventory {
             if(itemQuantities.get(selectedSpot) == 1) {
                 removeItem(selectedSpot);
                 selected = null;
+                gui.unselect();
+                updateFirstFreeSpot();
             } else {
                 itemQuantities.set(selectedSpot, itemQuantities.get(selectedSpot) - 1);
             }

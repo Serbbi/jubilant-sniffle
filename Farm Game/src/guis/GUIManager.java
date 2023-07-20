@@ -31,6 +31,7 @@ public class GUIManager {
     public void resizeGUIs() {
 //            System.out.println("Height: " + DisplayManager.getHeight() + "\n");
 //            System.out.println("Width: " + DisplayManager.getWidth() + "\n");
+        guiTextures = inventoryGUI.getAllGuis();
         for (GUITexture texture: guiTextures) {
             if(texture.getRatio() != 1) {
                 continue;
