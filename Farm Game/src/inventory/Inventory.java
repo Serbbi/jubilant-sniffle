@@ -8,12 +8,14 @@ import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import toolbox.Keyboard;
 import toolbox.Mouse;
+import utils.JSON.JSONObject;
+import utils.JSON.JSONable;
 
 import java.util.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class Inventory {
+public class Inventory implements JSONable {
     static final int TOTAL_SPOTS = 20;
     private static final float COOLDOWN = 0.3f;
     private Map<Integer, Item> items;
@@ -239,5 +241,10 @@ public class Inventory {
 
     public InventoryItemQuantities getItemQuantities() {
         return itemQuantities;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        return null;
     }
 }

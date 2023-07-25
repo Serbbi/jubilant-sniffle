@@ -21,7 +21,8 @@ public class Shovel implements Item{
         Terrain terrain = (Terrain) options.get("terrain");
         MousePicker mousePicker = (MousePicker) options.get("mousePicker");
         Vector3f v = mousePicker.getCurrentTerrainPoint();
-        terrain.changeTile(v.x, v.z, "mud");
+        //idk why but it's off by 1
+        terrain.changeTile(v.x, v.z + 1, "mud");
         return true;
     }
 

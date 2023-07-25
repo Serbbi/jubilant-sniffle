@@ -20,6 +20,7 @@ import org.lwjgl.system.MemoryStack;
 import terrain.Terrain;
 import toolbox.*;
 
+import java.io.*;
 import java.nio.IntBuffer;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -108,6 +109,7 @@ public class DisplayManager {
         renderer = new MasterRenderer();
         GUIRenderer guiRenderer = new GUIRenderer(loader);
         Terrain terrain = new Terrain(loader);
+        terrain.loadFromSave();
         TextMaster.init(loader);
 
         Light light = new Light(new Vector3f(0,50,50), new Vector3f(1,0.95f,0.86f));
@@ -178,6 +180,7 @@ public class DisplayManager {
             // invoked during this call.
             glfwPollEvents();
         }
+        saveGame(terrain);
 
         TextMaster.cleanUp();
         guiRenderer.cleanUp();
@@ -242,4 +245,14 @@ public class DisplayManager {
         renderer.resetProjectionMatrix();
     }
 
+    public void saveGame(Terrain terrain) {
+        try (FileWriter file = new FileWriter("save.json")) {
+            //We can write any JSONArray or JSONObject instance to the file
+            file.write(terrain.toJson().toJSONString());
+            file.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

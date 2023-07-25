@@ -11,10 +11,17 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import renderEngine.Loader;
 import textures.ModelTexture;
+import utils.JSON.JSONArray;
+import utils.JSON.JSONObject;
+import utils.JSON.JSONable;
+import utils.JSON.parser.JSONParser;
+import utils.JSON.parser.ParseException;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
-public class Terrain {
+public class Terrain implements JSONable {
     private Map<Pair<Float, Float>, Object> placedObjects;
     private Map<Pair<Float, Float>, Entity> tiles;
     private Map<Pair<Float, Float>, String> tileNames;
@@ -69,7 +76,7 @@ public class Terrain {
 
     public void changeTile(float x, float z, String tile) {
         TexturedModel newTile = tileModels.get(tile);
-        Pair<Float,Float> pair = new Pair<>(x = Math.floor(x),z = Math.floor(z)+1);//IDK why +1, but oh well
+        Pair<Float,Float> pair = new Pair<>(x = Math.floor(x),z = Math.floor(z));
         if (tiles.containsKey(pair)) {
             tiles.put(pair, new Entity(newTile, new Vector3f(x,0,z), 0,0,0,1));
             tileNames.put(pair, tile);
@@ -106,5 +113,43 @@ public class Terrain {
     public Object getThatObject(float x, float z) {
         Pair<Float, Float> pair = new Pair<>(x,z+1);
         return placedObjects.get(pair);
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        JSONArray tiles = new JSONArray();
+        for (Map.Entry<Pair<Float, Float>, String> entry : tileNames.entrySet()) {
+            JSONObject tile = new JSONObject();
+            tile.put("name", entry.getValue());
+            tile.put("x", entry.getKey().getFirst().toString());
+            tile.put("z", entry.getKey().getSecond().toString());
+            tiles.add(tile);
+        }
+        json.put("tiles", tiles);
+        return json;
+    }
+
+    public void loadFromSave() {
+        JSONParser jsonParser = new JSONParser();
+
+        try (FileReader reader = new FileReader("save.json"))
+        {
+            //Read JSON file
+            Object obj = jsonParser.parse(reader);
+            JSONObject jsonObject = (JSONObject) obj;
+            JSONArray tiles = (JSONArray) jsonObject.get("tiles");
+
+            tiles.forEach(tile -> {
+                JSONObject tileObject = (JSONObject) tile;
+                String name = (String) tileObject.get("name");
+                float x = Float.parseFloat((String) tileObject.get("x"));
+                float z = Float.parseFloat((String) tileObject.get("z"));
+                changeTile(x,z,name);
+            });
+
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }
