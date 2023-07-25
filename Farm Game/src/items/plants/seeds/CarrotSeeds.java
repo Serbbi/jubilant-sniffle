@@ -5,7 +5,6 @@ import items.Item;
 import items.plants.Carrot;
 import kotlin.Pair;
 import org.joml.Vector3f;
-import renderEngine.Loader;
 import terrain.Terrain;
 import toolbox.MousePicker;
 
@@ -22,9 +21,8 @@ public class CarrotSeeds implements Item {
     }
 
     @Override
-    public void use() {
+    public boolean use() {
         Terrain terrain = (Terrain) options.get("terrain");
-        Loader loader = (Loader) options.get("loader");
         MousePicker mousePicker = (MousePicker) options.get("mousePicker");
         Vector3f c = mousePicker.getCurrentTerrainPoint();
         //TODO: NULL VALUE ERROR
@@ -32,14 +30,26 @@ public class CarrotSeeds implements Item {
         float zCoord = (float) Math.floor(c.z);
         if(!terrain.isTileOccupied(xCoord, zCoord)) {
             if(Objects.equals(terrain.getTileNames().get(new Pair<>(xCoord, zCoord + 1)), "mud")) {
-                Carrot carrot = new Carrot(loader, (int) xCoord, (int) zCoord);
+                Carrot carrot = new Carrot((int) xCoord, (int) zCoord);
                 terrain.placeObject(xCoord,zCoord, carrot);
+                return true;
             }
         }
+        return false;
     }
 
     @Override
     public GUITexture getTexture() {
         return icon;
+    }
+
+    @Override
+    public boolean isStackable() {
+        return true;
+    }
+
+    @Override
+    public String getName() {
+        return "Carrot Seeds";
     }
 }

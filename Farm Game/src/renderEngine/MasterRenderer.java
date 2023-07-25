@@ -6,6 +6,7 @@ import entities.Light;
 import models.TexturedModel;
 import org.joml.Matrix4f;
 import shaders.StaticShader;
+import toolbox.Maths;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,5 +46,9 @@ public class MasterRenderer {
 
     public void setProjectionMatrix(Matrix4f matrix) {
         renderer.setProjectionMatrix(matrix);
+    }
+
+    public void resetProjectionMatrix() {
+        renderer.setProjectionMatrix(Maths.createProjectionMatrix());
     }
 }

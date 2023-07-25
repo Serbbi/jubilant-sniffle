@@ -1,6 +1,8 @@
 package entities;
 
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
+import toolbox.Keyboard;
 
 public class Light {
     private Vector3f position;
@@ -36,5 +38,28 @@ public class Light {
 
     public void setColour(Vector3f colour) {
         this.colour = colour;
+    }
+
+    public void modify() {
+        //1.0, 0.95, 0.86 is good
+        if(Keyboard.isKeyDown(GLFW.GLFW_KEY_I)) {
+            colour.x = Math.min(1, colour.x + 0.01f);
+            System.out.println("Colour: " + colour);
+        } else if (Keyboard.isKeyDown(GLFW.GLFW_KEY_J)) {
+            colour.x = Math.max(0, colour.x - 0.01f);
+            System.out.println("Colour: " + colour);
+        } else if (Keyboard.isKeyDown(GLFW.GLFW_KEY_O)) {
+            colour.y = Math.min(1, colour.y + 0.01f);
+            System.out.println("Colour: " + colour);
+        } else if (Keyboard.isKeyDown(GLFW.GLFW_KEY_K)) {
+            colour.y = Math.max(0, colour.y - 0.01f);
+            System.out.println("Colour: " + colour);
+        } else if (Keyboard.isKeyDown(GLFW.GLFW_KEY_P)) {
+            colour.z = Math.min(1, colour.z + 0.01f);
+            System.out.println("Colour: " + colour);
+        } else if (Keyboard.isKeyDown(GLFW.GLFW_KEY_L)) {
+            colour.z = Math.max(0, colour.z - 0.01f);
+            System.out.println("Colour: " + colour);
+        }
     }
 }

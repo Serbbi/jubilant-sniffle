@@ -7,8 +7,6 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import renderEngine.DisplayManager;
 
-import static org.joml.Math.max;
-
 public class Maths {
     public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale) {
         Matrix4f matrix = new Matrix4f();
@@ -69,7 +67,6 @@ public class Maths {
         return projectionMatrix;
     }
 
-    //TODO: fix code duplication with mouse picker
     public static Vector3f getPointOnTerrain(Camera camera) {
         Vector3f currentRay = calculateRay(camera);
         if (intersectionInRange(0, 600, currentRay, camera)) {
@@ -86,7 +83,7 @@ public class Maths {
         return worldRay;
     }
 
-    private static Vector3f toWorldCoords(Vector4f eyeCoords, Camera camera) {
+    public static Vector3f toWorldCoords(Vector4f eyeCoords, Camera camera) {
         Matrix4f viewMatrix = Maths.createViewMatrix(camera);
         Matrix4f invertedView = viewMatrix.invert();
         Vector4f rayWorld = invertedView.transform(eyeCoords);
@@ -95,7 +92,7 @@ public class Maths {
         return mouseRay;
     }
 
-    private static Vector4f toEyeCoords(Vector4f clipCoords) {
+    public static Vector4f toEyeCoords(Vector4f clipCoords) {
         Matrix4f projectionMatrix = Maths.createProjectionMatrix();
         Matrix4f invertedProjection = new Matrix4f();
         // REMINDER TO USE MATRIX.INVERT(DESTINATION);!!!!! altfel modifica matricea initiala
@@ -103,8 +100,6 @@ public class Maths {
         Vector4f eyeCoords = invertedProjection.transform(clipCoords);
         return new Vector4f(eyeCoords.x, eyeCoords.y, -1f, 0f);
     }
-
-    //**********************************************************
 
     private static Vector3f getPointOnRay(Vector3f ray, float distance, Camera camera) {
         Vector3f camPos = camera.getPosition();
@@ -114,9 +109,9 @@ public class Maths {
         return scaledRay;
     }
 
-    private static Vector3f binarySearch(int count, float start, float finish, Vector3f ray, Camera camera) {
+    public static Vector3f binarySearch(int count, float start, float finish, Vector3f ray, Camera camera) {
         float half = start + ((finish - start) / 2f);
-        if (count >= 200) {
+        if (count >= 200) {//arbitrary chosen number
             return getPointOnRay(ray, half, camera);
         }
         if (intersectionInRange(start, half, ray, camera)) {
@@ -126,7 +121,7 @@ public class Maths {
         }
     }
 
-    private static boolean intersectionInRange(float start, float finish, Vector3f ray, Camera camera) {
+    public static boolean intersectionInRange(float start, float finish, Vector3f ray, Camera camera) {
         Vector3f startPoint = getPointOnRay(ray, start, camera);
         Vector3f endPoint = getPointOnRay(ray, finish, camera);
         return !isUnderGround(startPoint) && isUnderGround(endPoint);

@@ -4,14 +4,13 @@ import components.GrowthComponent;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import fontRendering.TextMaster;
 import guis.GUIManager;
 import guis.GUIRenderer;
-import guis.GUITexture;
 import inventory.Inventory;
 import items.ItemFactory;
 import items.plants.Plant;
 import kotlin.Pair;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -19,11 +18,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 import terrain.Terrain;
-import toolbox.Keyboard;
-import toolbox.Mouse;
-import toolbox.MousePicker;
-import toolbox.StorageObjects;
-import utils.Texture;
+import toolbox.*;
 
 import java.nio.IntBuffer;
 import java.util.*;
@@ -44,6 +39,7 @@ public class DisplayManager {
     private static float delta;
     private ExecutorService executorService;
     private GUIManager guiManager;
+    private MasterRenderer renderer;
 
     public void createDisplay() {
         // Setup an error callback. The default implementation
@@ -87,7 +83,7 @@ public class DisplayManager {
             );
         } // the stack frame is popped automatically
 
-        glfwSetFramebufferSizeCallback(window, this::framebuffer_size_callback);
+        glfwSetWindowSizeCallback(window, this::window_size_callback);
         executorService = Executors.newCachedThreadPool();
 
         // Make the OpenGL context current
@@ -109,27 +105,30 @@ public class DisplayManager {
         GL.createCapabilities();
 
         Loader loader = new Loader();
-        MasterRenderer renderer = new MasterRenderer();
+        renderer = new MasterRenderer();
         GUIRenderer guiRenderer = new GUIRenderer(loader);
         Terrain terrain = new Terrain(loader);
+        TextMaster.init(loader);
 
-        //TODO: GIVE LIGHT CENTER OF TERRAIN
-        Light light = new Light(new Vector3f(25,75,25), new Vector3f(1,1,1));
+        Light light = new Light(new Vector3f(0,50,50), new Vector3f(1,0.95f,0.86f));
         Camera camera = new Camera();
-        MousePicker mousePicker = new MousePicker(camera,terrain);
+        MousePicker mousePicker = new MousePicker(camera);
 
         Inventory inventory = new Inventory(loader);
         ItemFactory itemFactory = new ItemFactory(terrain, mousePicker, inventory, loader);
         itemFactory.createShovel();
         itemFactory.createCarrotSeeds();
         itemFactory.createHoe();
+        itemFactory.createWheatSeeds();
+        itemFactory.createCabbageSeeds();
 
         GrowthComponent growthComponent = new GrowthComponent();
         executorService.submit(growthComponent);
 
-        guiManager = new GUIManager(inventory.getGui());
-        guiManager.addGUIList(inventory.getGui().getInventoryTextures());
-        guiManager.addGUIList(inventory.getGui().getBigInventoryTextures());
+        guiManager = new GUIManager(inventory);
+        guiManager.resizeGUIs();
+
+        PlantModelsStorage.initializePlantModels(loader);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -145,10 +144,11 @@ public class DisplayManager {
             }
             renderTerrain(renderer,terrain);
 
+            guiRenderer.render(inventory.getGui().getInventoryBar());
             if(inventory.isOpen()) {
-                guiRenderer.render(inventory.getGui().getBigInventoryTextures());
+                guiRenderer.render(inventory.getGui().getBigInventory());
             }
-            guiRenderer.render(inventory.getGui().getInventoryTextures());
+            guiRenderer.render(inventory.getGui().getItemIconsFromInventoryBar());
             inventory.select();
             inventory.updateFlyingItem();
 
@@ -158,23 +158,28 @@ public class DisplayManager {
                     inventory.useItem();
                 }
             }
-
-            if(Keyboard.isKeyDown(GLFW_KEY_R)) {
-                guiManager.resizeGUIs();
-                inventory.getGui().resetInventoryGUI();
-            }
-
             if(Keyboard.isKeyDown(GLFW_KEY_E)) {
                 inventory.setOpen(!inventory.isOpen());
+            }
+            if(Keyboard.isKeyDown(GLFW_KEY_Q)) {
+                itemFactory.createCarrotSeeds();
+                itemFactory.createWheatSeeds();
+                itemFactory.createCabbageSeeds();
+                guiManager.resizeGUIs();
             }
             if (Keyboard.isKeyDown(GLFW_KEY_ESCAPE)) {
                 glfwSetWindowShouldClose(window, true);
             }
+            TextMaster.render();
+
+
             glfwSwapBuffers(window); // swap the color buffers
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();
         }
+
+        TextMaster.cleanUp();
         guiRenderer.cleanUp();
         loader.cleanUp();
         renderer.cleanUp();
@@ -224,12 +229,17 @@ public class DisplayManager {
         lastFrameTime = currentFrameTime;
     }
 
-    public void framebuffer_size_callback(long window, int width, int height) {
+    public void window_size_callback(long window, int width, int height) {
+        DisplayManager.width[0] = width;
+        DisplayManager.height[0] = height;
         glViewport(0, 0, width, height);
         float aspectRatio = (float)width / (float)height;
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
         GL11.glOrtho(-aspectRatio, aspectRatio, -1.0f, 1.0f, -1.0f, 1.0f);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        guiManager.resizeGUIs();
+        renderer.resetProjectionMatrix();
     }
+
 }

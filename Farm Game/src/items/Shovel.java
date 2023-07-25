@@ -17,15 +17,26 @@ public class Shovel implements Item{
     }
 
     @Override
-    public void use() {
+    public boolean use() {
         Terrain terrain = (Terrain) options.get("terrain");
         MousePicker mousePicker = (MousePicker) options.get("mousePicker");
         Vector3f v = mousePicker.getCurrentTerrainPoint();
         terrain.changeTile(v.x, v.z, "mud");
+        return true;
     }
 
     @Override
     public GUITexture getTexture() {
         return icon;
+    }
+
+    @Override
+    public boolean isStackable() {
+        return false;
+    }
+
+    @Override
+    public String getName() {
+        return "Shovel";
     }
 }

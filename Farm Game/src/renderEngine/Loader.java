@@ -44,6 +44,15 @@ public class Loader {
         return new RawModel(vaoID, indices.length);
     }
 
+    public int loadToVAO(float[] positions, float[] textureCoords) {
+        int vaoID = createVAO();
+        storeDataInAttributeList(0, 2, positions);
+        storeDataInAttributeList(1,2,textureCoords);
+        unbindVAO();
+        return vaoID;
+    }
+
+    //TODO: create another one with bias 0 for font rendering
     public int loadTexture(String filename) {
             Texture texture = new Texture("Farm Game/res/"+filename+".png");
             GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);

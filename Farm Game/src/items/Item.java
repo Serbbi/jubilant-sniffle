@@ -1,9 +1,10 @@
 package items;
 
 import guis.GUITexture;
-import textures.ModelTexture;
 
 public interface Item {
-    void use();
+    boolean use();
     GUITexture getTexture();
+    boolean isStackable();
+    String getName();
 }

@@ -17,7 +17,8 @@ public class OBJFileLoader {
 		try {
 			isr = new FileReader(objFile);
 		} catch (FileNotFoundException e) {
-			System.err.println("File not found in res; don't use any extension");
+//			System.err.println("File not found in res; don't use any extension");
+			return null;
 		}
 		BufferedReader reader = new BufferedReader(isr);
 		String line;

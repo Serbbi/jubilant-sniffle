@@ -9,46 +9,52 @@ import renderEngine.Loader;
 import toolbox.Keyboard;
 import toolbox.Mouse;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Inventory {
-    private static final int TOTAL_SPOTS = 20;
+    static final int TOTAL_SPOTS = 20;
     private static final float COOLDOWN = 0.3f;
     private Map<Integer, Item> items;
+    private InventoryItemQuantities itemQuantities;
     private int firstFreeSpot = 1;
     private InventoryGUI gui;
     private Item selected;
-    private boolean isOpen = false;
+    private int selectedSpot;
+    static boolean isOpen = false;
     private double lastTimeOpened = 0;
-    private double lastTimePressed = 0;
     private Item flyingItem;
+    private int quantityFlyingItem;
     private int previousSpot;
 
     public Inventory(Loader loader) {
         gui = new InventoryGUI(loader);
         items = new HashMap<>();
+        itemQuantities = new InventoryItemQuantities(gui, loader);
     }
 
     public void select() {
         if (Keyboard.isKeyDown(GLFW_KEY_1)) {
             gui.select(1);
             selected = items.getOrDefault(1, null);
+            selectedSpot = 1;
         } else if (Keyboard.isKeyDown(GLFW_KEY_2)) {
             gui.select(2);
             selected = items.getOrDefault(2, null);
+            selectedSpot = 2;
         } else if (Keyboard.isKeyDown(GLFW_KEY_3)) {
             gui.select(3);
             selected = items.getOrDefault(3, null);
+            selectedSpot = 3;
         } else if (Keyboard.isKeyDown(GLFW_KEY_4)) {
             gui.select(4);
             selected = items.getOrDefault(4, null);
+            selectedSpot = 4;
         } else if (Keyboard.isKeyDown(GLFW_KEY_5)) {
             gui.select(5);
             selected = items.getOrDefault(5, null);
+            selectedSpot = 5;
         }
     }
 
@@ -58,44 +64,50 @@ public class Inventory {
         }
         float mouseX = Mouse.getMouseX();
         float mouseY = Mouse.getMouseY();
-        List<GUITexture> guiTextures = gui.getInventoryTextures();
-        for (int i = 0; i < gui.getSlotTextures().size(); i++) {
-            Pair<Float, Float> bottomLeft = guiTextures.get(i).getTextureCoords().getFirst();
-            Pair<Float, Float> topRight = guiTextures.get(i).getTextureCoords().getSecond();
+        List<GUITexture> slots = gui.getSlots();
+        int shownSlots = 5;
+        if(isOpen) {
+            shownSlots = TOTAL_SPOTS;
+        }
+        for (int i = 1; i <= shownSlots; i++) {
+            Pair<Float, Float> bottomLeft = slots.get(i).getTextureCoords().getFirst();
+            Pair<Float, Float> topRight = slots.get(i).getTextureCoords().getSecond();
             if(mouseX >= bottomLeft.getFirst() && mouseX <= topRight.getFirst() &&
                     mouseY <= bottomLeft.getSecond() && mouseY >= topRight.getSecond()) {
-                if(Mouse.isDragging() && i < gui.getItemTextures().size()) {
+                if(Mouse.isDragging()) {
                     if(flyingItem != null) {
                         return;
                     }
-                    if(items.containsKey(i + 1)) {
-                        flyingItem = items.get(i + 1);
-                        previousSpot = i + 1;
+                    if(items.containsKey(i)) {
+                        flyingItem = items.get(i);
+                        quantityFlyingItem = itemQuantities.get(i);
+                        previousSpot = i;
                         selected = null;
                         gui.unselect();
-//                        System.out.println("Picked up item");
                         break;
                     }
                 }
-                gui.select(i + 1);
-                selected = items.getOrDefault(i + 1, null);
+                gui.select(i);
+                selected = items.getOrDefault(i, null);
+                selectedSpot = i;
                 break;
             }
         }
     }
 
     public void updateFlyingItem() {
-        if(!Mouse.isDragging()) {
+        if(!Mouse.isPressedLeftButton()) {
             if(flyingItem != null) {
                 int slot = isAboveInventory();
                 if(slot != -1) {
-                    items.remove(previousSpot);
-                    addItem(flyingItem, slot);
-//                    System.out.println("Added item to slot " + slot);
+                    removeItem(previousSpot);
+                    if(!addItemAtSlot(flyingItem, slot, quantityFlyingItem)) {
+                        addItemAtSlot(flyingItem, previousSpot, quantityFlyingItem);
+                    }
+                    updateFirstFreeSpot();
                 } else {
-                    addItem(flyingItem, previousSpot);
-                    flyingItem.getTexture().setPosition(gui.getSlotTextures().get(previousSpot - 1).getPosition());
-//                    System.out.println("Added item back");
+                    addItemAtSlot(flyingItem, previousSpot, quantityFlyingItem);
+                    flyingItem.getTexture().setPosition(gui.getSlots().get(previousSpot).getPosition());
                 }
                 flyingItem = null;
             }
@@ -116,22 +128,55 @@ public class Inventory {
         return gui;
     }
 
-    public void addItemAtFirstFreeSpot(Item item) {
-        items.put(firstFreeSpot, item);
-        if(firstFreeSpot < 6) {
-            gui.addIcon(item.getTexture(), firstFreeSpot - 1);
+    public boolean addItemAtFirstFreeSpot(Item item, int quantity) {
+        if(firstFreeSpot <= TOTAL_SPOTS) {
+            items.put(firstFreeSpot, item);
+            itemQuantities.set(firstFreeSpot, quantity);
+            gui.addIcon(item.getTexture(), firstFreeSpot);
+            updateFirstFreeSpot();
+        } else {
+            return false;
         }
-        updateFreeSpot();
+        return true;
     }
 
-    public void addItem(Item item, int slot) {
+    public boolean addItemAtSlot(Item item, int slot, int quantity) {
         if(!items.containsKey(slot)) {
             items.put(slot, item);
-            gui.addIcon(item.getTexture(), slot - 1);
+            itemQuantities.set(slot, itemQuantities.get(slot) + quantity);
+            gui.addIcon(item.getTexture(), slot);
+            return true;
         }
+        return false;
     }
 
-    private void updateFreeSpot() {
+    public boolean addItem(Item item, int quantity) {
+        if(item.isStackable()) {
+            int slot = isInInventory(item);
+            if(slot != 0) {
+                itemQuantities.set(slot, itemQuantities.get(slot) + quantity);
+                return true;
+            }
+        }
+        return addItemAtFirstFreeSpot(item, quantity);
+    }
+
+    private int isInInventory(Item item) {
+        for (int i = 1; i <= TOTAL_SPOTS; i++) {
+            if(items.containsKey(i) && Objects.equals(items.get(i).getName(), item.getName())) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    public void removeItem(int slot) {
+        items.remove(slot);
+        itemQuantities.set(slot, 0);
+        gui.removeIcon(slot);
+    }
+
+    private void updateFirstFreeSpot() {
         for (int i = 1; i <= TOTAL_SPOTS; i++) {
             if(!items.containsKey(i)) {
                 firstFreeSpot = i;
@@ -144,19 +189,33 @@ public class Inventory {
         if (selected == null || isAboveInventory() != -1 || flyingItem != null) {
             return;
         }
-        selected.use();
+        boolean success = selected.use();
+        if(success && selected.isStackable()) {
+            if(itemQuantities.get(selectedSpot) == 1) {
+                removeItem(selectedSpot);
+                selected = null;
+                gui.unselect();
+                updateFirstFreeSpot();
+            } else {
+                itemQuantities.set(selectedSpot, itemQuantities.get(selectedSpot) - 1);
+            }
+        }
     }
 
     public int isAboveInventory() {
         float mouseX = Mouse.getMouseX();
         float mouseY = Mouse.getMouseY();
-        List<GUITexture> guiTextures = gui.getInventoryTextures();
-        for (int i = 0; i < gui.getSlotTextures().size(); i++) {
-            Pair<Float, Float> bottomLeft = guiTextures.get(i).getTextureCoords().getFirst();
-            Pair<Float, Float> topRight = guiTextures.get(i).getTextureCoords().getSecond();
+        List<GUITexture> slots = gui.getSlots();
+        int shownSlots = 5;
+        if(isOpen) {
+            shownSlots = TOTAL_SPOTS;
+        }
+        for (int i = 1; i <= shownSlots; i++) {
+            Pair<Float, Float> bottomLeft = slots.get(i).getTextureCoords().getFirst();
+            Pair<Float, Float> topRight = slots.get(i).getTextureCoords().getSecond();
             if(mouseX >= bottomLeft.getFirst() && mouseX <= topRight.getFirst() &&
                     mouseY <= bottomLeft.getSecond() && mouseY >= topRight.getSecond()) {
-                return i + 1;
+                return i;
             }
         }
         return -1;
@@ -170,6 +229,15 @@ public class Inventory {
         if(lastTimeOpened + COOLDOWN < glfwGetTime()) {
             lastTimeOpened = glfwGetTime();
             isOpen = open;
+            if(open) {
+                itemQuantities.showBigInventoryQuantities();
+            } else {
+                itemQuantities.hideBigInventoryQuantities();
+            }
         }
+    }
+
+    public InventoryItemQuantities getItemQuantities() {
+        return itemQuantities;
     }
 }
