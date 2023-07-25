@@ -19,6 +19,8 @@ public class PlantModelsStorage {
 
     public static void initializePlantModels(Loader loader) {
         addPlantModel("carrot", loader);
+        addPlantModel("wheat", loader);
+        addPlantModel("cabbage", loader);
     }
 
     //plant objs to be named like this: 'plant'Stage'number', ex: carrotStage0

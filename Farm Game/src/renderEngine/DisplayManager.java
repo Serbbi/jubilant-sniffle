@@ -110,7 +110,7 @@ public class DisplayManager {
         Terrain terrain = new Terrain(loader);
         TextMaster.init(loader);
 
-        Light light = new Light(new Vector3f(0,50,50), new Vector3f(1,1,1));
+        Light light = new Light(new Vector3f(0,50,50), new Vector3f(1,0.95f,0.86f));
         Camera camera = new Camera();
         MousePicker mousePicker = new MousePicker(camera);
 
@@ -119,6 +119,8 @@ public class DisplayManager {
         itemFactory.createShovel();
         itemFactory.createCarrotSeeds();
         itemFactory.createHoe();
+        itemFactory.createWheatSeeds();
+        itemFactory.createCabbageSeeds();
 
         GrowthComponent growthComponent = new GrowthComponent();
         executorService.submit(growthComponent);
@@ -156,12 +158,13 @@ public class DisplayManager {
                     inventory.useItem();
                 }
             }
-
             if(Keyboard.isKeyDown(GLFW_KEY_E)) {
                 inventory.setOpen(!inventory.isOpen());
             }
             if(Keyboard.isKeyDown(GLFW_KEY_Q)) {
                 itemFactory.createCarrotSeeds();
+                itemFactory.createWheatSeeds();
+                itemFactory.createCabbageSeeds();
                 guiManager.resizeGUIs();
             }
             if (Keyboard.isKeyDown(GLFW_KEY_ESCAPE)) {

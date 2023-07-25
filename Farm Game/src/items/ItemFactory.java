@@ -2,7 +2,9 @@ package items;
 
 import guis.GUITexture;
 import inventory.Inventory;
+import items.plants.seeds.CabbageSeeds;
 import items.plants.seeds.CarrotSeeds;
+import items.plants.seeds.WheatSeeds;
 import org.joml.Vector2f;
 import renderEngine.Loader;
 import terrain.Terrain;
@@ -48,6 +50,24 @@ public class ItemFactory {
         GUITexture icon = new GUITexture(loader.loadTexture("items/plants/carrot/carrotSeedsIcon"), new Vector2f(0,0), new Vector2f(0.2f,0.2f));
         CarrotSeeds carrotSeeds = new CarrotSeeds(icon, options);
         boolean status = inventory.addItem(carrotSeeds, 20);//random given quantity
+        if (!status) {
+            System.out.println("Inventory is full");
+        }
+    }
+
+    public void createWheatSeeds() {
+        GUITexture icon = new GUITexture(loader.loadTexture("items/plants/wheat/wheatSeedsIcon"), new Vector2f(0,0), new Vector2f(0.2f,0.2f));
+        WheatSeeds wheatSeeds = new WheatSeeds(icon, options);
+        boolean status = inventory.addItem(wheatSeeds, 20);//random given quantity
+        if (!status) {
+            System.out.println("Inventory is full");
+        }
+    }
+
+    public void createCabbageSeeds() {
+        GUITexture icon = new GUITexture(loader.loadTexture("items/plants/cabbage/cabbageSeedsIcon"), new Vector2f(0,0), new Vector2f(0.2f,0.2f));
+        CabbageSeeds cabbageSeeds = new CabbageSeeds(icon, options);
+        boolean status = inventory.addItem(cabbageSeeds, 20);//random given quantity
         if (!status) {
             System.out.println("Inventory is full");
         }

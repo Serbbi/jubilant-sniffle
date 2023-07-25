@@ -7,21 +7,20 @@ import org.joml.Vector3f;
 import toolbox.PlantModelsStorage;
 import toolbox.StorageObjects;
 
-//TODO: remove duplicate code
-public class Carrot extends Entity implements Item, Plant {
+public class Cabbage extends Entity implements Item, Plant {
     private GUITexture icon;
     private int currentStage = 0;
     private static final int MAX_STAGE = 4;
 
-    public Carrot(int x, int z) {
+    public Cabbage(int x, int z) {
         super();
-        icon = PlantModelsStorage.getPlantIcon("carrot");
+        icon = PlantModelsStorage.getPlantIcon("cabbage");
         updateEntity(x, z);
         StorageObjects.addPlant(this);
     }
 
     public void updateEntity(int x, int z) {
-        setModel(PlantModelsStorage.getPlantModel("carrot", currentStage));
+        setModel(PlantModelsStorage.getPlantModel("cabbage", currentStage));
         setPosition(new Vector3f(x+0.5f,0,z+0.5f));
         setRotX(0);
         setRotY(0);
@@ -32,18 +31,13 @@ public class Carrot extends Entity implements Item, Plant {
     @Override
     public void grow() {
         if (currentStage < MAX_STAGE) {
-            setModel(PlantModelsStorage.getPlantModel("carrot", ++currentStage));
+            setModel(PlantModelsStorage.getPlantModel("cabbage", ++currentStage));
         }
     }
 
     @Override
     public boolean canHarvest() {
         return currentStage == MAX_STAGE;
-    }
-
-    @Override
-    public String getName() {
-        return "Carrot";
     }
 
     @Override
@@ -61,4 +55,8 @@ public class Carrot extends Entity implements Item, Plant {
         return true;
     }
 
+    @Override
+    public String getName() {
+        return "Cabbage";
+    }
 }
