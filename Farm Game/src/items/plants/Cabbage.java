@@ -6,8 +6,10 @@ import items.Item;
 import org.joml.Vector3f;
 import toolbox.PlantModelsStorage;
 import toolbox.StorageObjects;
+import utils.JSON.JSONObject;
+import utils.JSON.JSONable;
 
-public class Cabbage extends Entity implements Item, Plant {
+public class Cabbage extends Entity implements Item, Plant, JSONable {
     private GUITexture icon;
     private int currentStage = 0;
     private static final int MAX_STAGE = 4;
@@ -17,6 +19,13 @@ public class Cabbage extends Entity implements Item, Plant {
         icon = PlantModelsStorage.getPlantIcon("cabbage");
         updateEntity(x, z);
         StorageObjects.addPlant(this);
+    }
+
+    public Cabbage(int x, int z, int stage) {
+        super();
+        icon = PlantModelsStorage.getPlantIcon("cabbage");
+        currentStage = stage;
+        updateEntity(x, z);
     }
 
     public void updateEntity(int x, int z) {
@@ -58,5 +67,15 @@ public class Cabbage extends Entity implements Item, Plant {
     @Override
     public String getName() {
         return "Cabbage";
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", "cabbage");
+        json.put("stage", currentStage);
+        json.put("x", getPosition().x);
+        json.put("z", getPosition().z);
+        return json;
     }
 }

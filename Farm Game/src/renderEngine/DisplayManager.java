@@ -17,6 +17,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
+import saver.GameSaver;
 import terrain.Terrain;
 import toolbox.*;
 
@@ -109,8 +110,9 @@ public class DisplayManager {
         renderer = new MasterRenderer();
         GUIRenderer guiRenderer = new GUIRenderer(loader);
         Terrain terrain = new Terrain(loader);
-        terrain.loadFromSave();
         TextMaster.init(loader);
+
+        PlantModelsStorage.initializePlantModels(loader);
 
         Light light = new Light(new Vector3f(0,50,50), new Vector3f(1,0.95f,0.86f));
         Camera camera = new Camera();
@@ -126,11 +128,12 @@ public class DisplayManager {
 
         GrowthComponent growthComponent = new GrowthComponent();
         executorService.submit(growthComponent);
+        GameSaver gameSaver = new GameSaver(terrain, camera, inventory);
+        gameSaver.loadGame();
 
         guiManager = new GUIManager(inventory);
         guiManager.resizeGUIs();
 
-        PlantModelsStorage.initializePlantModels(loader);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -180,7 +183,7 @@ public class DisplayManager {
             // invoked during this call.
             glfwPollEvents();
         }
-        saveGame(terrain);
+        gameSaver.saveGame();
 
         TextMaster.cleanUp();
         guiRenderer.cleanUp();
@@ -243,16 +246,5 @@ public class DisplayManager {
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         guiManager.resizeGUIs();
         renderer.resetProjectionMatrix();
-    }
-
-    public void saveGame(Terrain terrain) {
-        try (FileWriter file = new FileWriter("save.json")) {
-            //We can write any JSONArray or JSONObject instance to the file
-            file.write(terrain.toJson().toJSONString());
-            file.flush();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

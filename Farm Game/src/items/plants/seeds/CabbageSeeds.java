@@ -28,10 +28,10 @@ public class CabbageSeeds implements Item {
         //TODO: NULL VALUE ERROR
         float xCoord = (float) Math.floor(c.x);
         float zCoord = (float) Math.floor(c.z);
-        if(!terrain.isTileOccupied(xCoord, zCoord)) {
+        if(!terrain.isTileOccupied(xCoord, zCoord + 1)) {
             if(Objects.equals(terrain.getTileNames().get(new Pair<>(xCoord, zCoord + 1)), "mud")) {
                 Cabbage cabbage = new Cabbage((int) xCoord, (int) zCoord);
-                terrain.placeObject(xCoord,zCoord, cabbage);
+                terrain.placeObject(xCoord,zCoord + 1, cabbage);
                 return true;
             }
         }

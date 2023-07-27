@@ -55,12 +55,12 @@ public class JSONObject extends HashMap implements Map, JSONAware, JSONStreamAwa
         boolean first = true;
         Iterator iter=map.entrySet().iterator();
 
-        out.write('{');
+        out.write("{\n");
         while(iter.hasNext()){
             if(first)
                 first = false;
             else
-                out.write(',');
+                out.write(",\n");
             Map.Entry entry=(Map.Entry)iter.next();
             out.write('\"');
             out.write(escape(String.valueOf(entry.getKey())));

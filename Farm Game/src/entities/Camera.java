@@ -7,8 +7,10 @@ import terrain.Terrain;
 import toolbox.Keyboard;
 import toolbox.Maths;
 import toolbox.Mouse;
+import utils.JSON.JSONObject;
+import utils.JSON.JSONable;
 
-public class Camera {
+public class Camera implements JSONable {
     private Vector3f position = new Vector3f(25,10,25);
     private float pitch = 30;
     private float yaw = 0;
@@ -108,5 +110,10 @@ public class Camera {
 
     public float getRoll() {
         return roll;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        return null;
     }
 }

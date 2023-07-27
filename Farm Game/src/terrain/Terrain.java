@@ -1,6 +1,7 @@
 package terrain;
 
 import entities.Entity;
+import items.plants.Plant;
 import kotlin.Pair;
 import models.RawModel;
 import models.TexturedModel;
@@ -14,11 +15,7 @@ import textures.ModelTexture;
 import utils.JSON.JSONArray;
 import utils.JSON.JSONObject;
 import utils.JSON.JSONable;
-import utils.JSON.parser.JSONParser;
-import utils.JSON.parser.ParseException;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
 public class Terrain implements JSONable {
@@ -96,22 +93,22 @@ public class Terrain implements JSONable {
     }
 
     public void placeObject(float x, float z, Object object) {
-        Pair<Float, Float> pair = new Pair<>(x,z+1);
+        Pair<Float, Float> pair = new Pair<>(x,z);
         placedObjects.put(pair, object);
     }
 
     public void removeObject(float x, float z) {
-        Pair<Float, Float> pair = new Pair<>(x,z+1);
+        Pair<Float, Float> pair = new Pair<>(x,z);
         placedObjects.remove(pair);
     }
 
     public boolean isTileOccupied(float x, float z) {
-        Pair<Float, Float> pair = new Pair<>(x,z+1);
+        Pair<Float, Float> pair = new Pair<>(x,z);
         return placedObjects.containsKey(pair);
     }
 
     public Object getThatObject(float x, float z) {
-        Pair<Float, Float> pair = new Pair<>(x,z+1);
+        Pair<Float, Float> pair = new Pair<>(x,z);
         return placedObjects.get(pair);
     }
 
@@ -130,26 +127,14 @@ public class Terrain implements JSONable {
         return json;
     }
 
-    public void loadFromSave() {
-        JSONParser jsonParser = new JSONParser();
-
-        try (FileReader reader = new FileReader("save.json"))
-        {
-            //Read JSON file
-            Object obj = jsonParser.parse(reader);
-            JSONObject jsonObject = (JSONObject) obj;
-            JSONArray tiles = (JSONArray) jsonObject.get("tiles");
-
-            tiles.forEach(tile -> {
-                JSONObject tileObject = (JSONObject) tile;
-                String name = (String) tileObject.get("name");
-                float x = Float.parseFloat((String) tileObject.get("x"));
-                float z = Float.parseFloat((String) tileObject.get("z"));
-                changeTile(x,z,name);
-            });
-
-        } catch (ParseException | IOException e) {
-            e.printStackTrace();
-        }
+    public void loadFromJson(JSONObject json) {
+        JSONArray tiles = (JSONArray) json.get("tiles");
+        tiles.forEach(tile -> {
+            JSONObject tileObject = (JSONObject) tile;
+            String name = (String) tileObject.get("name");
+            float x = Float.parseFloat((String) tileObject.get("x"));
+            float z = Float.parseFloat((String) tileObject.get("z"));
+            changeTile(x,z,name);
+        });
     }
 }

@@ -6,9 +6,11 @@ import items.Item;
 import org.joml.Vector3f;
 import toolbox.PlantModelsStorage;
 import toolbox.StorageObjects;
+import utils.JSON.JSONObject;
+import utils.JSON.JSONable;
 
 //TODO: remove duplicate code
-public class Carrot extends Entity implements Item, Plant {
+public class Carrot extends Entity implements Item, Plant, JSONable {
     private GUITexture icon;
     private int currentStage = 0;
     private static final int MAX_STAGE = 4;
@@ -18,6 +20,13 @@ public class Carrot extends Entity implements Item, Plant {
         icon = PlantModelsStorage.getPlantIcon("carrot");
         updateEntity(x, z);
         StorageObjects.addPlant(this);
+    }
+
+    public Carrot(int x, int z, int stage) {
+        super();
+        icon = PlantModelsStorage.getPlantIcon("carrot");
+        currentStage = stage;
+        updateEntity(x, z);
     }
 
     public void updateEntity(int x, int z) {
@@ -61,4 +70,13 @@ public class Carrot extends Entity implements Item, Plant {
         return true;
     }
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", "carrot");
+        json.put("stage", currentStage);
+        json.put("x", getPosition().x);
+        json.put("z", getPosition().z);
+        return json;
+    }
 }

@@ -28,11 +28,11 @@ public class Hoe implements Item{
         Vector3f v = mousePicker.getCurrentTerrainPoint();
         float xCoord = (float) Math.floor(v.x);
         float zCoord = (float) Math.floor(v.z);
-        Object object = terrain.getThatObject(xCoord, zCoord);
+        Object object = terrain.getThatObject(xCoord, zCoord + 1);
         if(object instanceof Plant plant) {
             if(plant.canHarvest() && inventory.addItem((Item) plant, 1)) {
                 StorageObjects.removePlant(plant);
-                terrain.removeObject(xCoord, zCoord);
+                terrain.removeObject(xCoord, zCoord + 1);
                 return true;
             }
         }
