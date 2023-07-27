@@ -45,7 +45,7 @@ public class GameSaver {
             JSONObject json = (JSONObject) jsonParser.parse(reader);
             terrain.loadFromJson((JSONObject) json.get("terrain"));
             StorageObjects.loadFromJson((JSONObject) json.get("storageObjects"), terrain);
-//            camera.loadFromJson((JSON Object) json.get("camera"));
+            camera.loadFromJson((JSONObject) json.get("camera"));
 //            inventory.loadFromJson((JSONObject) json.get("inventory"));
         } catch (ParseException | IOException e) {
             e.printStackTrace();

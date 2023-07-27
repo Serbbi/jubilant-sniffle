@@ -9,6 +9,7 @@ import toolbox.Maths;
 import toolbox.Mouse;
 import utils.JSON.JSONObject;
 import utils.JSON.JSONable;
+import utils.JSON.parser.JSONParser;
 
 public class Camera implements JSONable {
     private Vector3f position = new Vector3f(25,10,25);
@@ -114,6 +115,26 @@ public class Camera implements JSONable {
 
     @Override
     public JSONObject toJson() {
-        return null;
+        JSONObject json = new JSONObject();
+        json.put("positionX", position.x);
+        json.put("positionY", position.y);
+        json.put("positionZ", position.z);
+        json.put("pitch", pitch);
+        json.put("yaw", yaw);
+        json.put("roll", roll);
+        return json;
+    }
+
+    public void loadFromJson(JSONObject json) {
+        double x = (double) json.get("positionX");
+        double y = (double) json.get("positionY");
+        double z = (double) json.get("positionZ");
+        double pitch = (double) json.get("pitch");
+        double yaw = (double) json.get("yaw");
+        double roll = (double) json.get("roll");
+        position = new Vector3f((float) x, (float) y, (float) z);
+        this.pitch = (float) pitch;
+        this.yaw = (float) yaw;
+        this.roll = (float) roll;
     }
 }
