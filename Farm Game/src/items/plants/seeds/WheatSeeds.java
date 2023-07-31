@@ -8,11 +8,13 @@ import kotlin.Pair;
 import org.joml.Vector3f;
 import terrain.Terrain;
 import toolbox.MousePicker;
+import utils.JSON.JSONObject;
+import utils.JSON.JSONable;
 
 import java.util.Map;
 import java.util.Objects;
 
-public class WheatSeeds implements Item {
+public class WheatSeeds implements Item, JSONable {
     private final GUITexture icon;
     private final Map<String, Object> options;
 
@@ -51,5 +53,12 @@ public class WheatSeeds implements Item {
     @Override
     public String getName() {
         return "Wheat Seeds";
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", "wheat seeds");
+        return json;
     }
 }

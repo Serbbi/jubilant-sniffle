@@ -8,10 +8,12 @@ import org.joml.Vector3f;
 import terrain.Terrain;
 import toolbox.MousePicker;
 import toolbox.StorageObjects;
+import utils.JSON.JSONObject;
+import utils.JSON.JSONable;
 
 import java.util.Map;
 
-public class Hoe implements Item{
+public class Hoe implements Item, JSONable {
     private final GUITexture icon;
     private final Map<String, Object> options;
 
@@ -52,5 +54,12 @@ public class Hoe implements Item{
     @Override
     public String getName() {
         return "Hoe";
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", "hoe");
+        return json;
     }
 }

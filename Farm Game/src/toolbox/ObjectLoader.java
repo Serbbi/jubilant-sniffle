@@ -1,5 +1,6 @@
 package toolbox;
 
+import items.Item;
 import items.plants.Cabbage;
 import items.plants.Carrot;
 import items.plants.Wheat;

@@ -4,10 +4,12 @@ import guis.GUITexture;
 import org.joml.Vector3f;
 import terrain.Terrain;
 import toolbox.MousePicker;
+import utils.JSON.JSONObject;
+import utils.JSON.JSONable;
 
 import java.util.Map;
 
-public class Shovel implements Item{
+public class Shovel implements Item, JSONable {
     private final GUITexture icon;
     private final Map<String, Object> options;
 
@@ -39,5 +41,12 @@ public class Shovel implements Item{
     @Override
     public String getName() {
         return "Shovel";
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", "shovel");
+        return json;
     }
 }

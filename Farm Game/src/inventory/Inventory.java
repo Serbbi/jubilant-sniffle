@@ -8,6 +8,7 @@ import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import toolbox.Keyboard;
 import toolbox.Mouse;
+import utils.JSON.JSONArray;
 import utils.JSON.JSONObject;
 import utils.JSON.JSONable;
 
@@ -147,6 +148,7 @@ public class Inventory implements JSONable {
             items.put(slot, item);
             itemQuantities.set(slot, itemQuantities.get(slot) + quantity);
             gui.addIcon(item.getTexture(), slot);
+            updateFirstFreeSpot();
             return true;
         }
         return false;
@@ -245,6 +247,16 @@ public class Inventory implements JSONable {
 
     @Override
     public JSONObject toJson() {
-        return null;
+        JSONObject json = new JSONObject();
+        JSONArray itemsJson = new JSONArray();
+        for (Map.Entry<Integer, Item> entry: items.entrySet()) {
+            JSONObject itemJson = new JSONObject();
+            itemJson.put("slot", entry.getKey());
+            itemJson.put("item", ((JSONable) entry.getValue()).toJson());
+            itemJson.put("quantity", itemQuantities.get(entry.getKey()));
+            itemsJson.add(itemJson);
+        }
+        json.put("items", itemsJson);
+        return json;
     }
 }

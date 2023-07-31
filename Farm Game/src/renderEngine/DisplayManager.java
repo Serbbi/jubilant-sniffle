@@ -120,16 +120,16 @@ public class DisplayManager {
 
         Inventory inventory = new Inventory(loader);
         ItemFactory itemFactory = new ItemFactory(terrain, mousePicker, inventory, loader);
-        itemFactory.createShovel();
-        itemFactory.createCarrotSeeds();
-        itemFactory.createHoe();
-        itemFactory.createWheatSeeds();
-        itemFactory.createCabbageSeeds();
+//        itemFactory.createShovel(0, 1);
+//        itemFactory.createCarrotSeeds();
+//        itemFactory.createHoe(0, 1);
+//        itemFactory.createWheatSeeds();
+//        itemFactory.createCabbageSeeds();
 
         GrowthComponent growthComponent = new GrowthComponent();
         executorService.submit(growthComponent);
-        GameSaver gameSaver = new GameSaver(terrain, camera, inventory);
-        gameSaver.loadGame();
+        GameSaver gameSaver = new GameSaver(terrain, camera, inventory, itemFactory);
+//        gameSaver.loadGame();
 
         guiManager = new GUIManager(inventory);
         guiManager.resizeGUIs();
@@ -167,9 +167,13 @@ public class DisplayManager {
                 inventory.setOpen(!inventory.isOpen());
             }
             if(Keyboard.isKeyDown(GLFW_KEY_Q)) {
-                itemFactory.createCarrotSeeds();
-                itemFactory.createWheatSeeds();
-                itemFactory.createCabbageSeeds();
+                itemFactory.createCarrotSeeds(0, 20);
+                itemFactory.createWheatSeeds(0, 10);
+                itemFactory.createCabbageSeeds(0, 10);
+                guiManager.resizeGUIs();
+            }
+            if(Keyboard.isKeyDown(GLFW_KEY_O)) {
+                gameSaver.loadGame();
                 guiManager.resizeGUIs();
             }
             if (Keyboard.isKeyDown(GLFW_KEY_ESCAPE)) {

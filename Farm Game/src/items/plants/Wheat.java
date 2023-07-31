@@ -28,6 +28,12 @@ public class Wheat extends Entity implements Item, Plant, JSONable {
         updateEntity(x, z);
     }
 
+    public Wheat() {
+        super();
+        icon = PlantModelsStorage.getPlantIcon("wheat");
+        setPosition(new Vector3f(0,0,0));
+    }
+
     public void updateEntity(int x, int z) {
         setModel(PlantModelsStorage.getPlantModel("wheat", currentStage));
         setPosition(new Vector3f(x+0.5f,0,z+0.5f));

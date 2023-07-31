@@ -29,6 +29,12 @@ public class Carrot extends Entity implements Item, Plant, JSONable {
         updateEntity(x, z);
     }
 
+    public Carrot() {
+        super();
+        icon = PlantModelsStorage.getPlantIcon("carrot");
+        setPosition(new Vector3f(0,0,0));
+    }
+
     public void updateEntity(int x, int z) {
         setModel(PlantModelsStorage.getPlantModel("carrot", currentStage));
         setPosition(new Vector3f(x+0.5f,0,z+0.5f));

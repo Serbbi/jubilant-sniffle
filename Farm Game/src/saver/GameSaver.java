@@ -2,6 +2,8 @@ package saver;
 
 import entities.Camera;
 import inventory.Inventory;
+import inventory.InventoryStateLoader;
+import items.ItemFactory;
 import terrain.Terrain;
 import toolbox.StorageObjects;
 import utils.JSON.JSONObject;
@@ -16,11 +18,13 @@ public class GameSaver {
     private Terrain terrain;
     private Camera camera;
     private Inventory inventory;
+    private ItemFactory itemFactory;
 
-    public GameSaver(Terrain terrain, Camera camera, Inventory inventory) {
+    public GameSaver(Terrain terrain, Camera camera, Inventory inventory, ItemFactory itemFactory) {
         this.terrain = terrain;
         this.camera = camera;
         this.inventory = inventory;
+        this.itemFactory = itemFactory;
     }
 
     public void saveGame() {
@@ -46,7 +50,7 @@ public class GameSaver {
             terrain.loadFromJson((JSONObject) json.get("terrain"));
             StorageObjects.loadFromJson((JSONObject) json.get("storageObjects"), terrain);
             camera.loadFromJson((JSONObject) json.get("camera"));
-//            inventory.loadFromJson((JSONObject) json.get("inventory"));
+            InventoryStateLoader.loadFromJson((JSONObject) json.get("inventory"), itemFactory);
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
