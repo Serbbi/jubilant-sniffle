@@ -9,7 +9,6 @@ import toolbox.Maths;
 import toolbox.Mouse;
 import utils.JSON.JSONObject;
 import utils.JSON.JSONable;
-import utils.JSON.parser.JSONParser;
 
 public class Camera implements JSONable {
     private Vector3f position = new Vector3f(25,10,25);
@@ -68,24 +67,20 @@ public class Camera implements JSONable {
     public void zoom() {
         if (Mouse.getScrollY() != 0) {
             Vector3f lookPoint = Maths.getPointOnTerrain(this);
-            float xRatio = (position.x - lookPoint.x) * 0.2f;
-            float yRatio = (position.y - lookPoint.y) * 0.2f;
-            float zRatio = (position.z - lookPoint.z) * 0.2f;
+            float xRatio = (lookPoint.x - position.x) * 0.2f;
+            float yRatio = (lookPoint.y - position.y) * 0.2f;
+            float zRatio = (lookPoint.z - position.z) * 0.2f;
+
             if (Mouse.getScrollY() > 0) {
-                increasePosY(-yRatio);
-                if (position.y <= LOWER_LIMIT) {
-                    increasePosX(-xRatio);
-                    increasePosZ(-zRatio);
-                }
-            } else {
                 increasePosY(yRatio);
                 increasePosX(xRatio);
                 increasePosZ(zRatio);
-//                if (position.y >= UPPER_LIMIT) {
-//                    increasePosX(xRatio);
-//                    increasePosZ(zRatio);
-//                }
+            } else {
+                increasePosY(-yRatio);
+                increasePosX(-xRatio);
+                increasePosZ(-zRatio);
             }
+
             Mouse.setScrollY(0);
         }
     }

@@ -21,7 +21,6 @@ import saver.GameSaver;
 import terrain.Terrain;
 import toolbox.*;
 
-import java.io.*;
 import java.nio.IntBuffer;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
