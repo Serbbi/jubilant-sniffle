@@ -1,5 +1,6 @@
 package toolbox;
 
+import items.plants.Crop;
 import items.plants.Plant;
 import terrain.Terrain;
 import utils.JSON.JSONArray;
@@ -43,7 +44,7 @@ public class StorageObjects {
             double x = (double) jsonPlantObject.get("x");
             double z = (double) jsonPlantObject.get("z");
             long stage = (long) jsonPlantObject.get("stage");
-            Plant plant = (Plant) ObjectLoader.getObject(name, (int) Math.floor(x), (int) Math.floor(z), (int) stage);
+            Plant plant = new Crop((int) Math.floor(x), (int) Math.floor(z), name, (int) stage);
             plants.add(plant);
             //terrain offset is 0.5f
             terrain.placeObject((float) x - 0.5f, (float) z + 0.5f, plant);

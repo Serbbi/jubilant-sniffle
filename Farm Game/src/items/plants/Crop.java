@@ -9,39 +9,50 @@ import toolbox.StorageObjects;
 import utils.JSON.JSONObject;
 import utils.JSON.JSONable;
 
-public class Wheat extends Entity implements Item, Plant, JSONable {
-    private GUITexture icon;
+public class Crop extends Entity implements Item, Plant, JSONable {
     private int currentStage = 0;
-    private static final int MAX_STAGE = 4;
+    private int maxStage;
+    private GUITexture icon;
+    private String name;
 
-    public Wheat(int x, int z) {
+    public Crop(int x, int z, String name) {
         super();
-        icon = PlantModelsStorage.getPlantIcon("wheat");
+        this.name = name;
+        getCropData();
         updateEntity(x, z);
         StorageObjects.addPlant(this);
     }
 
-    public Wheat(int x, int z, int stage) {
+    public Crop(int x, int z, String name, int stage) {
         super();
-        icon = PlantModelsStorage.getPlantIcon("wheat");
+        this.name = name;
+        getCropData();
         currentStage = stage;
         updateEntity(x, z);
     }
 
-    public Wheat() {
+    public Crop(String name) {
         super();
-        icon = PlantModelsStorage.getPlantIcon("wheat");
+        this.name = name;
+        icon = PlantModelsStorage.getPlantIcon(name);
         setPosition(new Vector3f(0,0,0));
     }
 
     public void updateEntity(int x, int z) {
-        setModel(PlantModelsStorage.getPlantModel("wheat", currentStage));
+        setModel(PlantModelsStorage.getPlantModel(name, currentStage));
         setPosition(new Vector3f(x+0.5f,0,z+0.5f));
         setRotX(0);
         setRotY(0);
         setRotZ(0);
         setScale(1);
     }
+
+    private void getCropData() {
+        icon = PlantModelsStorage.getPlantIcon(name);
+        JSONObject json = PlantModelsStorage.getPlantJson(name);
+        maxStage = ((Long) json.get("maxStage")).intValue();
+    }
+
 
     @Override
     public boolean use() {
@@ -60,25 +71,25 @@ public class Wheat extends Entity implements Item, Plant, JSONable {
 
     @Override
     public void grow() {
-        if (currentStage < MAX_STAGE) {
-            setModel(PlantModelsStorage.getPlantModel("wheat", ++currentStage));
+        if (currentStage < maxStage) {
+            setModel(PlantModelsStorage.getPlantModel(name, ++currentStage));
         }
     }
 
     @Override
     public boolean canHarvest() {
-        return currentStage == MAX_STAGE;
+        return currentStage == maxStage;
     }
 
     @Override
     public String getName() {
-        return "Wheat";
+        return name;
     }
 
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
-        json.put("name", "wheat");
+        json.put("name", name);
         json.put("stage", currentStage);
         json.put("x", getPosition().x);
         json.put("z", getPosition().z);

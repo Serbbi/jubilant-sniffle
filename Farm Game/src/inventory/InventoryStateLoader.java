@@ -21,12 +21,12 @@ public class InventoryStateLoader {
         switch (itemName) {
             case "shovel" -> itemFactory.createShovel(slot, quantity);
             case "hoe" -> itemFactory.createHoe(slot, quantity);
-            case "carrot seeds" -> itemFactory.createCarrotSeeds(slot, quantity);
-            case "carrot" -> itemFactory.createCarrot(slot, quantity);
-            case "wheat seeds" -> itemFactory.createWheatSeeds(slot, quantity);
-            case "wheat" -> itemFactory.createWheat(slot, quantity);
-            case "cabbage seeds" -> itemFactory.createCabbageSeeds(slot, quantity);
-            case "cabbage" -> itemFactory.createCabbage(slot, quantity);
+            case "carrot seeds" -> itemFactory.createSeeds(slot, quantity, "carrot");
+            case "carrot" -> itemFactory.createCrop(slot, quantity, "carrot");
+            case "wheat seeds" -> itemFactory.createSeeds(slot, quantity, "wheat");
+            case "wheat" -> itemFactory.createCrop(slot, quantity, "wheat");
+            case "cabbage seeds" -> itemFactory.createSeeds(slot, quantity, "cabbage");
+            case "cabbage" -> itemFactory.createCrop(slot, quantity, "cabbage");
         }
     }
 }

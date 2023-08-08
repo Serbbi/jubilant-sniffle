@@ -17,17 +17,17 @@ public class GrowthComponent implements Runnable{
             for (Plant plant: StorageObjects.getPlants()) {
                 n = (int) (Math.random()*(MAX-MIN+1)+MIN);
                 switch (plant.getName()) {
-                    case "Carrot" -> {
+                    case "carrot" -> {
                         if (n > 30) {
                             plant.grow();
                         }
                     }
-                    case "Wheat" -> {
+                    case "wheat" -> {
                         if (n > 35) {
                             plant.grow();
                         }
                     }
-                    case "Cabbage" -> {
+                    case "cabbage" -> {
                         if (n > 40) {
                             plant.grow();
                         }

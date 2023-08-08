@@ -1,8 +1,7 @@
-package items.plants.seeds;
+package items.plants;
 
 import guis.GUITexture;
 import items.Item;
-import items.plants.Carrot;
 import kotlin.Pair;
 import org.joml.Vector3f;
 import terrain.Terrain;
@@ -13,13 +12,15 @@ import utils.JSON.JSONable;
 import java.util.Map;
 import java.util.Objects;
 
-public class CarrotSeeds implements Item, JSONable {
+public class Seeds implements Item, JSONable {
     private final GUITexture icon;
     private final Map<String, Object> options;
+    private final String cropType;
 
-    public CarrotSeeds(GUITexture icon, Map<String, Object> options) {
+    public Seeds(GUITexture icon, Map<String, Object> options) {
         this.icon = icon;
         this.options = options;
+        this.cropType = (String) options.get("cropType");
     }
 
     @Override
@@ -32,7 +33,7 @@ public class CarrotSeeds implements Item, JSONable {
         float zCoord = (float) Math.floor(c.z);
         if(!terrain.isTileOccupied(xCoord, zCoord + 1)) {
             if(Objects.equals(terrain.getTileNames().get(new Pair<>(xCoord, zCoord + 1)), "mud")) {
-                Carrot carrot = new Carrot((int) xCoord, (int) zCoord);
+                Crop carrot = new Crop((int) xCoord, (int) zCoord, cropType);
                 terrain.placeObject(xCoord,zCoord + 1, carrot);
                 return true;
             }
@@ -52,13 +53,13 @@ public class CarrotSeeds implements Item, JSONable {
 
     @Override
     public String getName() {
-        return "Carrot Seeds";
+        return cropType + " Seeds";
     }
 
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
-        json.put("name", "carrot seeds");
+        json.put("name", cropType + " seeds");
         return json;
     }
 }

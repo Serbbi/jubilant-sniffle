@@ -2,7 +2,6 @@ package items;
 
 import guis.GUITexture;
 import inventory.Inventory;
-import items.plants.Carrot;
 import items.plants.Plant;
 import org.joml.Vector3f;
 import terrain.Terrain;

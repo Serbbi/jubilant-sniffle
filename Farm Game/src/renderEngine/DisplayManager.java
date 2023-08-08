@@ -119,11 +119,6 @@ public class DisplayManager {
 
         Inventory inventory = new Inventory(loader);
         ItemFactory itemFactory = new ItemFactory(terrain, mousePicker, inventory, loader);
-//        itemFactory.createShovel(0, 1);
-//        itemFactory.createCarrotSeeds();
-//        itemFactory.createHoe(0, 1);
-//        itemFactory.createWheatSeeds();
-//        itemFactory.createCabbageSeeds();
 
         GrowthComponent growthComponent = new GrowthComponent();
         executorService.submit(growthComponent);
@@ -166,9 +161,11 @@ public class DisplayManager {
                 inventory.setOpen(!inventory.isOpen());
             }
             if(Keyboard.isKeyDown(GLFW_KEY_Q)) {
-                itemFactory.createCarrotSeeds(0, 20);
-                itemFactory.createWheatSeeds(0, 10);
-                itemFactory.createCabbageSeeds(0, 10);
+                itemFactory.createShovel(0, 1);
+                itemFactory.createHoe(0, 1);
+                itemFactory.createSeeds(0, 10, "carrot");
+                itemFactory.createSeeds(0, 10, "wheat");
+                itemFactory.createSeeds(0, 10, "cabbage");
                 guiManager.resizeGUIs();
             }
             if(Keyboard.isKeyDown(GLFW_KEY_O)) {
