@@ -11,6 +11,8 @@ import inventory.Inventory;
 import items.ItemFactory;
 import items.plants.Plant;
 import kotlin.Pair;
+import menu.MainMenu;
+import menu.MainMenuScreen;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -125,7 +127,10 @@ public class DisplayManager {
         GameSaver gameSaver = new GameSaver(terrain, camera, inventory, itemFactory);
 //        gameSaver.loadGame();
 
-        guiManager = new GUIManager(inventory);
+//        MainMenuScreen mainMenuScreen = new MainMenuScreen(loader);
+
+        MainMenu mainMenu = new MainMenu(loader, gameSaver);
+        guiManager = new GUIManager(inventory, mainMenu.getMainMenuScreen());
         guiManager.resizeGUIs();
 
 
@@ -134,49 +139,54 @@ public class DisplayManager {
         while ( !glfwWindowShouldClose(window) ) {
             calculateTime();
             glfwGetWindowSize(window, width, height);
-            camera.move();
-            mousePicker.update();
-            renderer.render(light,camera);
 
-            for (Plant plant: StorageObjects.getPlants()) {
-                renderer.processEntity((Entity) plant);
-            }
-            renderTerrain(renderer,terrain);
+            if(mainMenu.isOpen()) {
+                mainMenu.getMainMenuScreen().check();
+                guiRenderer.render(mainMenu.getMainMenuScreen().getAllGuis());
+            } else {
+                camera.move();
+                mousePicker.update();
+                renderer.render(light,camera);
 
-            guiRenderer.render(inventory.getGui().getInventoryBar());
-            if(inventory.isOpen()) {
-                guiRenderer.render(inventory.getGui().getBigInventory());
-            }
-            guiRenderer.render(inventory.getGui().getItemIconsFromInventoryBar());
-            inventory.select();
-            inventory.updateFlyingItem();
-
-            if(Mouse.isPressedLeftButton()) {
-                inventory.mouseSelect();
-                if(!inventory.isOpen()) {
-                    inventory.useItem();
+                for (Plant plant: StorageObjects.getPlants()) {
+                    renderer.processEntity((Entity) plant);
                 }
-            }
-            if(Keyboard.isKeyDown(GLFW_KEY_E)) {
-                inventory.setOpen(!inventory.isOpen());
-            }
-            if(Keyboard.isKeyDown(GLFW_KEY_Q)) {
-                itemFactory.createShovel(0, 1);
-                itemFactory.createHoe(0, 1);
-                itemFactory.createSeeds(0, 10, "carrot");
-                itemFactory.createSeeds(0, 10, "wheat");
-                itemFactory.createSeeds(0, 10, "cabbage");
-                guiManager.resizeGUIs();
-            }
-            if(Keyboard.isKeyDown(GLFW_KEY_O)) {
-                gameSaver.loadGame();
-                guiManager.resizeGUIs();
-            }
-            if (Keyboard.isKeyDown(GLFW_KEY_ESCAPE)) {
-                glfwSetWindowShouldClose(window, true);
-            }
-            TextMaster.render();
+                renderTerrain(renderer,terrain);
 
+                guiRenderer.render(inventory.getGui().getInventoryBar());
+                if(inventory.isOpen()) {
+                    guiRenderer.render(inventory.getGui().getBigInventory());
+                }
+                guiRenderer.render(inventory.getGui().getItemIconsFromInventoryBar());
+                inventory.select();
+                inventory.updateFlyingItem();
+
+                if(Mouse.isPressedLeftButton()) {
+                    inventory.mouseSelect();
+                    if(!inventory.isOpen()) {
+                        inventory.useItem();
+                    }
+                }
+                if(Keyboard.isKeyDown(GLFW_KEY_E)) {
+                    inventory.setOpen(!inventory.isOpen());
+                }
+                if(Keyboard.isKeyDown(GLFW_KEY_Q)) {
+                    itemFactory.createShovel(0, 1);
+                    itemFactory.createHoe(0, 1);
+                    itemFactory.createSeeds(0, 10, "carrot");
+                    itemFactory.createSeeds(0, 10, "wheat");
+                    itemFactory.createSeeds(0, 10, "cabbage");
+                    guiManager.resizeGUIs();
+                }
+                if(Keyboard.isKeyDown(GLFW_KEY_O)) {
+                    gameSaver.loadGame();
+                    guiManager.resizeGUIs();
+                }
+                if (Keyboard.isKeyDown(GLFW_KEY_ESCAPE)) {
+                    glfwSetWindowShouldClose(window, true);
+                }
+                TextMaster.render();
+            }
 
             glfwSwapBuffers(window); // swap the color buffers
             // Poll for window events. The key callback above will only be

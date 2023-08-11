@@ -2,7 +2,6 @@ package inventory;
 
 import guis.GUITexture;
 import org.joml.Vector2f;
-import renderEngine.DisplayManager;
 import renderEngine.Loader;
 
 import java.util.ArrayList;
@@ -52,38 +51,38 @@ public class InventoryGUI {
 
     public void resetInventoryGUI() {
         // the bottom inventory bar
-        setToLeftOf(slots.get(3), slots.get(2), DISTANCE_BETWEEN_SLOTS);
-        setToLeftOf(slots.get(2), slots.get(1), DISTANCE_BETWEEN_SLOTS);
-        setToRightOf(slots.get(3), slots.get(4), DISTANCE_BETWEEN_SLOTS);
-        setToRightOf(slots.get(4), slots.get(5), DISTANCE_BETWEEN_SLOTS);
+        slots.get(2).setToLeftOfTexture(slots.get(3), DISTANCE_BETWEEN_SLOTS);
+        slots.get(1).setToLeftOfTexture(slots.get(2), DISTANCE_BETWEEN_SLOTS);
+        slots.get(4).setToRightOfTexture(slots.get(3), DISTANCE_BETWEEN_SLOTS);
+        slots.get(5).setToRightOfTexture(slots.get(4), DISTANCE_BETWEEN_SLOTS);
 
         // the middle inventory
-        setToLeftOf(slots.get(13), slots.get(12), DISTANCE_BETWEEN_SLOTS);
-        setToLeftOf(slots.get(12), slots.get(11), DISTANCE_BETWEEN_SLOTS);
-        setToRightOf(slots.get(13), slots.get(14), DISTANCE_BETWEEN_SLOTS);
-        setToRightOf(slots.get(14), slots.get(15), DISTANCE_BETWEEN_SLOTS);
+        slots.get(12).setToLeftOfTexture(slots.get(13), DISTANCE_BETWEEN_SLOTS);
+        slots.get(11).setToLeftOfTexture(slots.get(12), DISTANCE_BETWEEN_SLOTS);
+        slots.get(14).setToRightOfTexture(slots.get(13), DISTANCE_BETWEEN_SLOTS);
+        slots.get(15).setToRightOfTexture(slots.get(14), DISTANCE_BETWEEN_SLOTS);
 
-        setToAboveOf(slots.get(11), slots.get(6), DISTANCE_BETWEEN_SLOTS);
-        setToAboveOf(slots.get(12), slots.get(7), DISTANCE_BETWEEN_SLOTS);
-        setToAboveOf(slots.get(13), slots.get(8), DISTANCE_BETWEEN_SLOTS);
-        setToAboveOf(slots.get(14), slots.get(9), DISTANCE_BETWEEN_SLOTS);
-        setToAboveOf(slots.get(15), slots.get(10), DISTANCE_BETWEEN_SLOTS);
+        slots.get(6).setToAboveOfTexture(slots.get(11), DISTANCE_BETWEEN_SLOTS);
+        slots.get(7).setToAboveOfTexture(slots.get(12), DISTANCE_BETWEEN_SLOTS);
+        slots.get(8).setToAboveOfTexture(slots.get(13), DISTANCE_BETWEEN_SLOTS);
+        slots.get(9).setToAboveOfTexture(slots.get(14), DISTANCE_BETWEEN_SLOTS);
+        slots.get(10).setToAboveOfTexture(slots.get(15), DISTANCE_BETWEEN_SLOTS);
 
-        setToLeftOf(slots.get(8), slots.get(7), DISTANCE_BETWEEN_SLOTS);
-        setToLeftOf(slots.get(7), slots.get(6), DISTANCE_BETWEEN_SLOTS);
-        setToRightOf(slots.get(8), slots.get(9), DISTANCE_BETWEEN_SLOTS);
-        setToRightOf(slots.get(9), slots.get(10), DISTANCE_BETWEEN_SLOTS);
+        slots.get(7).setToLeftOfTexture(slots.get(8), DISTANCE_BETWEEN_SLOTS);
+        slots.get(6).setToLeftOfTexture(slots.get(7), DISTANCE_BETWEEN_SLOTS);
+        slots.get(9).setToRightOfTexture(slots.get(8), DISTANCE_BETWEEN_SLOTS);
+        slots.get(10).setToRightOfTexture(slots.get(9), DISTANCE_BETWEEN_SLOTS);
 
-        setToBelowOf(slots.get(11), slots.get(16), DISTANCE_BETWEEN_SLOTS);
-        setToBelowOf(slots.get(12), slots.get(17), DISTANCE_BETWEEN_SLOTS);
-        setToBelowOf(slots.get(13), slots.get(18), DISTANCE_BETWEEN_SLOTS);
-        setToBelowOf(slots.get(14), slots.get(19), DISTANCE_BETWEEN_SLOTS);
-        setToBelowOf(slots.get(15), slots.get(20), DISTANCE_BETWEEN_SLOTS);
+        slots.get(16).setToBelowOfTexture(slots.get(11), DISTANCE_BETWEEN_SLOTS);
+        slots.get(17).setToBelowOfTexture(slots.get(12), DISTANCE_BETWEEN_SLOTS);
+        slots.get(18).setToBelowOfTexture(slots.get(13), DISTANCE_BETWEEN_SLOTS);
+        slots.get(19).setToBelowOfTexture(slots.get(14), DISTANCE_BETWEEN_SLOTS);
+        slots.get(20).setToBelowOfTexture(slots.get(15), DISTANCE_BETWEEN_SLOTS);
 
-        setToLeftOf(slots.get(18), slots.get(17), DISTANCE_BETWEEN_SLOTS);
-        setToLeftOf(slots.get(17), slots.get(16), DISTANCE_BETWEEN_SLOTS);
-        setToRightOf(slots.get(18), slots.get(19), DISTANCE_BETWEEN_SLOTS);
-        setToRightOf(slots.get(19), slots.get(20), DISTANCE_BETWEEN_SLOTS);
+        slots.get(17).setToLeftOfTexture(slots.get(18), DISTANCE_BETWEEN_SLOTS);
+        slots.get(16).setToLeftOfTexture(slots.get(17), DISTANCE_BETWEEN_SLOTS);
+        slots.get(19).setToRightOfTexture(slots.get(18), DISTANCE_BETWEEN_SLOTS);
+        slots.get(20).setToRightOfTexture(slots.get(19), DISTANCE_BETWEEN_SLOTS);
 
         for (int i = 1; i <= 20; i++) {
             GUITexture icon = itemIcons.getOrDefault(i, null);
@@ -92,46 +91,6 @@ public class InventoryGUI {
                 itemIcons.put(i, icon);//idk
             }
         }
-    }
-
-    public void setToRightOf(GUITexture guiTexture, GUITexture objectToPlace, float distance) {
-        int displayWidth = DisplayManager.getWidth();
-        int distanceInPixels = (int) (distance * displayWidth);
-        float halfOfReferenceObject = guiTexture.getPosition().x * displayWidth / 2 + (displayWidth * guiTexture.getScale().x / 2.0f);
-        float halfOfObjectToPlace = (displayWidth * objectToPlace.getScale().x / 2.0f);
-        distanceInPixels += halfOfReferenceObject + halfOfObjectToPlace;
-        float percentageOfScreen = (float) distanceInPixels / (displayWidth / 2.0f) * 100;
-        objectToPlace.setPosition(new Vector2f(percentageOfScreen/100, objectToPlace.getPosition().y));
-    }
-
-    public void setToLeftOf(GUITexture guiTexture, GUITexture objectToPlace, float distance) {
-        int displayWidth = DisplayManager.getWidth();
-        int distanceInPixels = (int) (distance * -1 * displayWidth);
-        float halfOfReferenceObject = guiTexture.getPosition().x * displayWidth / 2 - (displayWidth * guiTexture.getScale().x / 2.0f);
-        float halfOfObjectToPlace = (displayWidth * objectToPlace.getScale().x / -2.0f);
-        distanceInPixels += halfOfReferenceObject + halfOfObjectToPlace;
-        float percentageOfScreen = (float) distanceInPixels / (displayWidth / 2.0f) * 100;
-        objectToPlace.setPosition(new Vector2f(percentageOfScreen/100, objectToPlace.getPosition().y));
-    }
-
-    public void setToAboveOf(GUITexture guiTexture, GUITexture objectToPlace, float distance) {
-        int displayHeight = DisplayManager.getHeight();
-        int distanceInPixels = (int) (distance * displayHeight);
-        float halfOfReferenceObject = guiTexture.getPosition().y * displayHeight / 2 + (displayHeight * guiTexture.getScale().y / 2.0f);
-        float halfOfObjectToPlace = (displayHeight * objectToPlace.getScale().y / 2.0f);
-        distanceInPixels += halfOfReferenceObject + halfOfObjectToPlace;
-        float percentageOfScreen = (float) distanceInPixels / (displayHeight / 2.0f) * 100;
-        objectToPlace.setPosition(new Vector2f(objectToPlace.getPosition().x, percentageOfScreen/100));
-    }
-
-    public void setToBelowOf(GUITexture guiTexture, GUITexture objectToPlace, float distance) {
-        int displayHeight = DisplayManager.getHeight();
-        int distanceInPixels = (int) (distance * -1 * displayHeight);
-        float halfOfReferenceObject = guiTexture.getPosition().y * displayHeight / 2 - (displayHeight * guiTexture.getScale().y / 2.0f);
-        float halfOfObjectToPlace = (displayHeight * objectToPlace.getScale().y / -2.0f);
-        distanceInPixels += halfOfReferenceObject + halfOfObjectToPlace;
-        float percentageOfScreen = (float) distanceInPixels / (displayHeight / 2.0f) * 100;
-        objectToPlace.setPosition(new Vector2f(objectToPlace.getPosition().x, percentageOfScreen/100));
     }
 
     public void addIcon(GUITexture icon, int spot) {

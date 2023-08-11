@@ -3,6 +3,7 @@ package guis;
 import inventory.Inventory;
 import inventory.InventoryGUI;
 import inventory.InventoryItemQuantities;
+import menu.MainMenuScreen;
 import org.joml.Vector2f;
 import renderEngine.DisplayManager;
 
@@ -13,10 +14,12 @@ public class GUIManager {
     private List<GUITexture> guiTextures;
     private InventoryGUI inventoryGUI;
     private InventoryItemQuantities itemQuantities;
+    private MainMenuScreen mainMenuScreen;
 
-    public GUIManager(Inventory inventory) {
+    public GUIManager(Inventory inventory, MainMenuScreen mainMenuScreen) {
         this.inventoryGUI = inventory.getGui();
         this.itemQuantities = inventory.getItemQuantities();
+        this.mainMenuScreen = mainMenuScreen;
         guiTextures = new ArrayList<>();
     }
 
@@ -32,8 +35,14 @@ public class GUIManager {
 //            System.out.println("Height: " + DisplayManager.getHeight() + "\n");
 //            System.out.println("Width: " + DisplayManager.getWidth() + "\n");
         guiTextures = inventoryGUI.getAllGuis();
+        guiTextures.addAll(mainMenuScreen.getAllGuis());
+        guiTextures.addAll(mainMenuScreen.getAlternativeButtons());
         for (GUITexture texture: guiTextures) {
             if(texture.getRatio() != 1) {
+                texture.reSetTextureCoords();
+//                float y = texture.getScale().y;
+//                float x = y / ((float) DisplayManager.getWidth() / DisplayManager.getHeight());
+//                texture.setScale(new Vector2f(x, y));
                 continue;
             }
             float y = texture.getScale().y;

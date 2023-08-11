@@ -130,4 +130,8 @@ public class Maths {
     private static boolean isUnderGround(Vector3f testPoint) {
         return testPoint.y < 0;
     }
+
+    public static float mapFromPixelToScreenCoordinatesHeight(float pixels) {
+        return (pixels / DisplayManager.getHeight() * 2 - 1) * -1;
+    }
 }
